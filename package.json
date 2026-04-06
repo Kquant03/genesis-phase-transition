@@ -1,0 +1,40 @@
+{
+  "name": "genesis-alife",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Genesis — A Multi-Dimensional Artificial Life Laboratory. Ising phase transitions, Particle Lenia, Gray-Scott reaction-diffusion, Particle Life ecology, and Primordial Particle Systems. All browser-based, all real-time.",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.3.4",
+    "vite": "^6.0.0"
+  },
+  "homepage": "https://kquant03.github.io/social-phase-transition-lab",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Kquant03/genesis-alife"
+  },
+  "license": "MIT",
+  "author": "Stanley (Kquant03) — Replete AI",
+  "keywords": [
+    "artificial-life",
+    "ising-model",
+    "lenia",
+    "particle-lenia",
+    "reaction-diffusion",
+    "gray-scott",
+    "cellular-automata",
+    "phase-transition",
+    "emergence",
+    "complex-systems",
+    "webgpu",
+    "computational-physics"
+  ]
+}

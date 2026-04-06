@@ -19,8 +19,6 @@ A browser-based, real-time artificial life laboratory spanning statistical mecha
 [![React](https://img.shields.io/badge/React-18-61dafb.svg)](https://reactjs.org/)
 [![Vite](https://img.shields.io/badge/Vite-6-646cff.svg)](https://vitejs.dev/)
 
-[**→ Launch Live Demo**](https://kquant03.github.io/genesis-phase-transitions/)
-
 </div>
 
 ---

@@ -1,14 +1,14 @@
 import { useState, useRef, useEffect, lazy, Suspense } from "react";
 
 const SocialPhaseTransitionLab = lazy(() => import("./simulations/SocialPhaseTransitionLab.jsx"));
-const ParticleLenia = lazy(() => import("./simulations/ParticleLenia.jsx"));
+const Lenia = lazy(() => import("./simulations/Lenia.jsx"));
 const GrayScottRD = lazy(() => import("./simulations/GrayScottRD.jsx"));
 const ParticleLife = lazy(() => import("./simulations/ParticleLife.jsx"));
 const PrimordialParticles = lazy(() => import("./simulations/PrimordialParticles.jsx"));
 
 const SIMS = [
   { id: "ising", label: "Ising · Phase Transitions", icon: "◈", color: "#4ecdc4", desc: "2D Ising model with Metropolis-Hastings & Wolff cluster algorithms. Tsarev social mapping." },
-  { id: "lenia", label: "Particle Lenia", icon: "◉", color: "#f59e0b", desc: "Gradient-based particle life with Gaussian shell kernels. Mass-conservative multi-species ecology." },
+  { id: "lenia", label: "Lenia", icon: "◉", color: "#f59e0b", desc: "Continuous cellular automata with FFT convolution. Smooth organic lifeforms from Gaussian ring kernels and growth functions." },
   { id: "rd", label: "Gray-Scott RD", icon: "◎", color: "#a78bfa", desc: "Reaction-diffusion morphogenesis. Mitosis, coral, spirals, and soliton patterns from two PDEs." },
   { id: "plife", label: "Particle Life", icon: "◆", color: "#ec4899", desc: "Asymmetric force matrices between particle types. Emergent predation, symbiosis, membranes." },
   { id: "pps", label: "Primordial Particles", icon: "◇", color: "#34d399", desc: "One equation, two parameters. Cells that grow, divide, form spores, and self-repair." },
@@ -40,7 +40,7 @@ export default function App() {
   const sim = SIMS.find(s => s.id === active);
   const Comp = {
     ising: SocialPhaseTransitionLab,
-    lenia: ParticleLenia,
+    lenia: Lenia,
     rd: GrayScottRD,
     plife: ParticleLife,
     pps: PrimordialParticles,

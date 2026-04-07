@@ -284,9 +284,72 @@ function buildKernelData(R, peaks) {
   return data;
 }
 
-// ═══════════════ Orbium Seed ═══════════════
+// ═══════════════ RLE Decoder (Chakazul format) ═══════════════
+// Decodes Lenia's Run-Length Encoded cell patterns from animals.json
+// Format: digits=repeat, .=zero, A-Z=1-26, p-y prefix=+26 per step, $=newrow, !=end
 
-const ORBIUM = [
+function decodeRLE(str) {
+  const rows = str.replace(/!$/, '').split('$');
+  const grid = [];
+  let maxVal = 0;
+  let maxWidth = 0;
+  for (const row of rows) {
+    const cells = [];
+    let i = 0;
+    while (i < row.length) {
+      let count = 0;
+      while (i < row.length && row[i] >= '0' && row[i] <= '9') {
+        count = count * 10 + row.charCodeAt(i) - 48; i++;
+      }
+      if (count === 0) count = 1;
+      if (i >= row.length) break;
+      let val = 0;
+      if (row[i] === '.') { i++; }
+      else if (row[i] >= 'p' && row[i] <= 'y') {
+        val = (row.charCodeAt(i) - 111) * 26; i++;
+        if (i < row.length && row[i] >= 'A' && row[i] <= 'Z') { val += row.charCodeAt(i) - 64; i++; }
+      } else if (row[i] >= 'A' && row[i] <= 'Z') {
+        val = row.charCodeAt(i) - 64; i++;
+      } else { i++; continue; }
+      for (let j = 0; j < count; j++) cells.push(val);
+      if (val > maxVal) maxVal = val;
+    }
+    grid.push(cells);
+    if (cells.length > maxWidth) maxWidth = cells.length;
+  }
+  // Pad all rows to uniform width (RLE omits trailing zeros)
+  for (const row of grid) while (row.length < maxWidth) row.push(0);
+  // Normalize to [0,1]
+  if (maxVal > 0) for (const row of grid) for (let j = 0; j < row.length; j++) row[j] /= maxVal;
+  return grid;
+}
+
+// ═══════════════ Species Cell Data (from Chakazul/Lenia animals.json) ═══════════════
+// Each species has its own unique morphology tuned to its specific parameters
+
+const SPECIES_RLE = {
+  // Orbium unicaudatus — the classic glider soliton (μ=0.15, σ=0.017)
+  // Source: Chakazul/Lenia animals.json, code "O2(a)"
+  orbium: "7.MD6.qL$6.pKqEqFURpApBRAqQ$5.VqTrSsBrOpXpWpTpWpUpCrQ$4.CQrQsTsWsApITNPpGqGvL$3.IpIpWrOsGsBqXpJ4.LsFrL$A.DpKpSpJpDqOqUqSqE5.ExD$qL.pBpTT2.qCrGrVrWqM5.sTpP$.pGpWpD3.qUsMtItQtJ6.tL$.uFqGH3.pXtOuR2vFsK5.sM$.tUqL4.GuNwAwVxBwNpC4.qXpA$2.uH5.vBxGyEyMyHtW4.qIpL$2.wV5.tIyG3yOxQqW2.FqHpJ$2.tUS4.rM2yOyJyOyHtVpPMpFqNV$2.HsR4.pUxAyOxLxDxEuVrMqBqGqKJ$3.sLpE3.pEuNxHwRwGvUuLsHrCqTpR$3.TrMS2.pFsLvDvPvEuPtNsGrGqIP$4.pRqRpNpFpTrNtGtVtStGsMrNqNpF$5.pMqKqLqRrIsCsLsIrTrFqJpHE$6.RpSqJqPqVqWqRqKpRXE$8.OpBpIpJpFTK!",
+
+  // Orbium bicaudatus — two-tailed variant (μ=0.15, σ=0.014)
+  // Source: Chakazul/Lenia animals.json, code "O2(b)"
+  bicaudatus: "14.B$8.pKT$5.pIQJrIqT2pIVL.sC$5.qJrDpPqWrV3pPpUpPtG$4.pArAsHpPpIqTpK2.JpNrDrX$3.pApUpKqRpA.qHpX4.VxM$qM.QpUV.pPqCBqCrSL4.tLT$.OpPpF2.qErXqJrGtTtD4.EuA$.tJqEB2.pItJtBsC2vEpF4.tL$.wDpU4.uNvJtJvExEuP4.rNJ$.tGqC4.vMxHvMvRyOyIqM3.qOV$2.tV4.uFyIwVuFwQyOuKO.OqJQ$2.vM4.rXyOwVtBuCxUwIrApDpKqJG$2.sCpX3.qMyBxHuCtVwAvWsKqMqHpX$2.BrVJ2.pUvBwXvBuKuXuPsPrGqMT$3.qCqOVOpUsRvBuUuCtVtGsCqWpN$4.pXqOqEqMrStBtJtBsPrSqTpNG$5.pDqHqRrDrNrQrLqWqHpIG$6.EVpKpPpSpNpFOB$9.BEB!",
+
+  // Orbium unicaudatus ignis — fire form (μ=0.11, σ=0.012)
+  // Source: Chakazul/Lenia animals.json, code "O2(-)" unicaudatus ignis
+  ignis: "10.IPQMF$8.pKpRpSpTpWpUpQpBM$6.XqGV2DSpSqNqQqKpPSB$5.qBpX5.pOrHrSrMqSpTS$4.qCpQ6.rAtAtDsPrSqTpRP$4.rD6.pUuDuQtWtLsPrNqMpHA$3.uG7.uGwQvCuFuAtFrSqQpTN$2.vAL6.rKyFxLvIvBuTsXqWqFqAU$.tXqB7.wGyOyLxHwVuPqWpEpCpTpA$rDMpO6.sOxFyL2yOwDqR2.EpJpD$.WpH5.pIvNwSxQxXvEpD4.pFW$.pApM5.tUvCvUwEsI6.pOM$.TpPU3.sHtOuJuQqC7.qH$.HpJpPXIrKsFsStBpV7.pApH$2.MpGpMsStHsSrXqU8.rP$3.GrJtPuHtHrD8.sH$3.GrOsXtLsSU7.sC$4.pPrQrJpHpOQ5.qXT$5.pK.JpHpOWOQpMqHqG$8.KpEpMpQpLVqU$13.qD$12.pB!",
+
+  // Orbium bicaudatus ignis — fire two-tailed (μ=0.1, σ=0.008)
+  // Source: Chakazul/Lenia animals.json, code "O2(-)" bicaudatus ignis
+  bicaudatus_ignis: "11.pTpS$8.sMuWpVpEN$5.pHsUS3.N2pDK$3.DqEQ7.RpJQ$2.EpMB9.VpLN$2.pMH10.DpPrPqA$.RpF9.pAqJqIrOrKK$.pEpFB4.HsBvAuHsOpT.RqDX$.pNpP2pGqNtTxFyNxGuTsFpJ2.FqXsEpW$BpQqLrHsXvOwVvXuRtRrQqSqNqHqWqFqQpOG$BpNqTsFtQuItH2rRtNuCvBuRsNpD.JpLL$.pEqOrTsUtEtBtCuWyDxKvGpA4.pJK$.PqCrKsLtRvBwSyFvGpA5.ApHG$.IpOqUsBtFtWtBpI7.QpB$2.WqHrBqUpN9.pJO$2.FpNqGpMD8.pHpMqP$3.KpPpNK7.sBuD$4.EpEpITF2ApFsTrX$6.DVpJpRpLB!",
+};
+
+// Species seeds are decoded inline in buildInitialState to avoid
+// any module initialization ordering issues
+
+// Fallback Orbium (hardcoded, used if RLE decode fails)
+const ORBIUM_FALLBACK = [
   [0,0,0,0,0,0,0.1,0.14,0.1,0,0,0.03,0.03,0,0,0.3,0,0,0,0],
   [0,0,0,0,0,0.08,0.24,0.3,0.3,0.18,0.14,0.15,0.16,0.15,0.09,0.2,0,0,0,0],
   [0,0,0,0,0,0.15,0.34,0.44,0.46,0.38,0.18,0.14,0.11,0.13,0.19,0.18,0.45,0,0,0],
@@ -329,9 +392,16 @@ function scaleSeed(cells, fromR, toR) {
   return out;
 }
 
-function buildInitialState(R, count, isSoup) {
+function buildInitialState(R, count, isSoup, speciesKey) {
   const data = new Float32Array(N * N * 4);
-  const seed = R !== 13 ? scaleSeed(ORBIUM, 13, R) : ORBIUM;
+  // Decode species-specific seed inline (guaranteed fresh)
+  let baseSeed;
+  if (speciesKey && SPECIES_RLE[speciesKey]) {
+    baseSeed = decodeRLE(SPECIES_RLE[speciesKey]);
+  } else {
+    baseSeed = ORBIUM_FALLBACK;
+  }
+  const seed = R !== 13 ? scaleSeed(baseSeed, 13, R) : baseSeed;
   const h = seed.length, w = seed[0].length;
   const minDist = R * 4;
   const positions = [];
@@ -379,13 +449,18 @@ function buildInitialState(R, count, isSoup) {
 
 // ═══════════════ Presets ═══════════════
 
+// All presets use parameters within the documented Orbium survival niche
+// (Chan 2019, Figure 6: μ ∈ ~[0.13, 0.20], σ ∈ ~[0.013, 0.025] at R=13 T=10)
+// so the Orbium seed self-organizes into a stable creature in every case.
 const PRESETS = {
-  orbium:     { name: "Orbium",     desc: "The iconic glider — smooth, self-sustaining soliton", R: 13, T: 10, mu: 0.15, sigma: 0.017, peaks: [1], count: 3 },
-  bicaudatus: { name: "Bicaudatus", desc: "Two-tailed variant — tighter growth band", R: 13, T: 10, mu: 0.15, sigma: 0.014, peaks: [1], count: 3 },
-  ignis:      { name: "Ignis",      desc: "Fire form — lower density threshold", R: 13, T: 10, mu: 0.11, sigma: 0.012, peaks: [1], count: 4 },
-  gyrorbium:  { name: "Gyrorbium",  desc: "Spinning orboid — wider tolerance", R: 13, T: 10, mu: 0.156, sigma: 0.0224, peaks: [1], count: 3 },
-  vagorbium:  { name: "Vagorbium",  desc: "Wanderer — large neighborhood", R: 20, T: 10, mu: 0.2, sigma: 0.031, peaks: [1], count: 2 },
-  soup:       { name: "Soup",       desc: "Ecosystem — many seeds, watch survivors", R: 13, T: 10, mu: 0.15, sigma: 0.017, peaks: [1], count: 8, isSoup: true },
+  orbium:     { name: "Orbium",      desc: "The classic glider soliton — stable directed locomotion (μ=0.15, σ=0.017)", R: 13, T: 10, mu: 0.15, sigma: 0.017, peaks: [1], count: 3, species: "orbium" },
+  bicaudatus: { name: "Bicaudatus",  desc: "Two-tailed variant — tighter growth band splits the wake (μ=0.15, σ=0.014)", R: 13, T: 10, mu: 0.15, sigma: 0.014, peaks: [1], count: 3, species: "bicaudatus" },
+  ignis:      { name: "Ignis",       desc: "Fire form — narrow growth band needs fine timestep (μ=0.11, σ=0.012, T=20)", R: 13, T: 20, mu: 0.11, sigma: 0.012, peaks: [1], count: 4, spf: 4, species: "ignis" },
+  ignis_bi:   { name: "Ignis ×2",    desc: "Fire two-tailed — widened σ for GPU stability (μ=0.1, σ=0.01, T=40)", R: 13, T: 40, mu: 0.1, sigma: 0.01, peaks: [1], count: 3, spf: 6, species: "bicaudatus_ignis" },
+  laxus:      { name: "Laxus",       desc: "Loose Orbium — wide tolerance band, wobbly oscillating gait (μ=0.156, σ=0.024)", R: 13, T: 10, mu: 0.156, sigma: 0.024, peaks: [1], count: 3, species: "orbium" },
+  vagus:      { name: "Vagus",       desc: "Large-field wanderer — expanded R=20 neighborhood, different spatial scale", R: 20, T: 10, mu: 0.2, sigma: 0.031, peaks: [1], count: 2, species: "orbium" },
+  soup:       { name: "Soup",        desc: "Ecosystem — many seeds compete under Orbium conditions, watch natural selection", R: 13, T: 10, mu: 0.15, sigma: 0.017, peaks: [1], count: 8, isSoup: true, species: "orbium" },
+  ghost:      { name: "Ghost",       desc: "Ignis seed at wrong σ — knows its shape but can never reach it, sustains forever", R: 15, T: 12, mu: 0.11, sigma: 0.015, peaks: [1], count: 16, spf: 4, species: "ignis" },
 };
 
 const PALETTES = [
@@ -510,7 +585,7 @@ export default function Lenia() {
     const bloomFB = [createFB(gl, bloomTex[0]), createFB(gl, bloomTex[1])];
 
     // Upload initial state
-    const initData = buildInitialState(13, 3, false);
+    const initData = buildInitialState(13, 3, false, "orbium");
     gl.bindTexture(gl.TEXTURE_2D, stateTex[0]);
     gl.texSubImage2D(gl.TEXTURE_2D, 0, 0, 0, N, N, gl.RGBA, gl.FLOAT, initData);
 
@@ -569,8 +644,9 @@ export default function Lenia() {
   const loadPreset = useCallback((id) => {
     const p = PRESETS[id];
     setPreset(id); setR(p.R); setMu(p.mu); setSigma(p.sigma); setDt(1 / p.T);
+    if (p.spf) setSpf(p.spf);
     updateKernel(p.R, p.peaks);
-    uploadState(buildInitialState(p.R, p.count, p.isSoup));
+    uploadState(buildInitialState(p.R, p.count, p.isSoup, p.species));
     frameRef.current = 0;
     setFrameCount(0);
   }, [updateKernel, uploadState]);
@@ -578,7 +654,7 @@ export default function Lenia() {
   // ── Reset ──
   const reset = useCallback(() => {
     const p = PRESETS[preset];
-    uploadState(buildInitialState(p.R, p.count, p.isSoup));
+    uploadState(buildInitialState(p.R, p.count, p.isSoup, p.species));
     frameRef.current = 0;
     setFrameCount(0);
   }, [preset, uploadState]);

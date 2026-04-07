@@ -64,21 +64,23 @@ The 2D Ising model on a square lattice — the cornerstone of statistical mechan
 
 ---
 
-### ◉ Particle Lenia — Mathematical Life Forms
+### ◉ Lenia — Continuous Cellular Automata
 
-<img src="docs/gifs/particle_lenia.gif" alt="Particle Lenia organisms self-organizing through gradient-based motion" width="256" align="right" />
+<img src="docs/gifs/ghost_interaction.gif" alt="Lenia Ghost species — Orbium unicaudatus ignis var. phantasma — morphing and communicating through shared potential fields" width="256" align="right" />
 
-After Mordvintsev, Niklasson & Randazzo (Google Research, 2022). Discrete particles interact through a Gaussian shell kernel and self-organize into gliders, rotors, and multi-species ecologies via gradient ascent on a growth field.
+After Bert Chan (2018). A continuous cellular automaton where space, time, and state are all smooth. WebGL2 GPU-accelerated with shader-based bloom, running at 60fps on a 256×256 toroidal grid. Eight species including *Orbium unicaudatus ignis* var. *phantasma* — the **Ghost**, a novel species engineered to inhabit the edge of chaos.
 
 **The math:**
 ```
-K(r) = w · exp(−(r − μ_K)² / 2σ_K²)     Gaussian shell kernel
-U(x) = Σᵢ K(‖x − pᵢ‖)                   Field reconstruction
-G(u) = 2·exp(−(u − μ_G)² / 2σ_G²) − 1    Growth function
-dp/dt = −∇E = ∇G(U) − ∇R                 Gradient descent on local energy
+K(r) = exp(4 − 4 / (4r(1−r)))            Exponential bump kernel
+U(x) = Σ K(‖x − y‖/R) · A(y)             Convolution potential field
+G(u) = 2·exp(−(u − μ)² / 2σ²) − 1        Growth function
+A^(t+dt) = clip(A^t + dt·G(U), 0, 1)      State update
 ```
 
-**Features:** Four species presets (Orbium, Mushroom, Swarm, Multi-Species), real-time parameter control, trail rendering, per-particle glow scaled by velocity.
+**Eight species:** Orbium (glider soliton) · Bicaudatus (two-tailed) · Ignis (fire form) · Ignis ×2 (fire two-tailed) · Laxus (loose oscillator) · Vagus (large-field wanderer) · Soup (ecosystem) · **Ghost** (sustained edge-of-chaos morphing)
+
+**The Ghost species** seeds the Ignis morphology (tuned for σ=0.012) under deliberately mismatched parameters (σ=0.015, R=15). The organism remembers its shape but cannot reach it — producing perpetual morphing, field-mediated inter-organism communication, and emergent network ripples across populations of 16 individuals.
 
 <br clear="right" />
 
@@ -150,7 +152,7 @@ From this alone: cells form, grow, divide, produce spores, migrate, self-repair,
 
 This repository is part of the **Teármann Research Ecosystem:**
 
-- **Shoal-Broadcast Architecture** — Particle Lenia IS the shoal-broadcast pattern: agents swimming through continuous scalar fields rather than passing discrete messages
+- **Shoal-Broadcast Architecture** — The Ghost species IS the shoal-broadcast pattern made visible: organisms communicating not through discrete messages but through perturbations in a shared continuous scalar field. Each Ghost's morphological instability becomes a signal source for its neighbors.
 - **Tsarev–Dicke Mapping** — The Ising substrate connects to Tsarev et al.'s quantum-optics model of social opinion dynamics, where the superradiant phase transition = spontaneous consensus formation
 - **CLAIRE/Teármann Thesis** — Mechanistically transparent simulation data formally collapses underspecification in ML training. Every causal pathway in Genesis is observable.
 
@@ -165,7 +167,7 @@ genesis-phase-transitions/
 │   ├── App.jsx                             # Navigation + live hero simulation
 │   └── simulations/
 │       ├── SocialPhaseTransitionLab.jsx     # ◈ Ising model (~970 lines)
-│       ├── ParticleLenia.jsx               # ◉ Particle Lenia
+│       ├── Lenia.jsx                       # ◉ Lenia (grid-based, WebGL2 GPU)
 │       ├── GrayScottRD.jsx                 # ◎ Gray-Scott RD
 │       ├── ParticleLife.jsx                # ◆ Particle Life
 │       └── PrimordialParticles.jsx         # ◇ Primordial Particles
@@ -179,7 +181,7 @@ genesis-phase-transitions/
 ## References
 
 - **Ising Model:** Onsager (1944); Wolff (1989); Tsarev, Trofimova, Alodjants & Khrennikov, "Phase transitions, collective emotions and decision-making problem in heterogeneous social systems," *Sci. Rep.* **9**, 18039 (2019)
-- **Lenia:** Chan, "Lenia — Biology of Artificial Life" arXiv:1812.05433 (2018); Mordvintsev, Niklasson & Randazzo, "Particle Lenia and the energy-based formulation" (2022)
+- **Lenia:** Chan, "Lenia — Biology of Artificial Life" arXiv:1812.05433 (2018); Chan, "Lenia and Expanded Universe" ALIFE 2020; Sebastian & Claude, "*O. u. ignis* var. *phantasma*: A Lenia Species Engineered to Inhabit the Edge of Chaos" (2026, internal)
 - **Flow-Lenia:** Plantec et al., "Flow-Lenia: Mass conservation and parameter localization" (2023, ALIFE Best Paper)
 - **Gray-Scott:** Pearson, "Complex patterns in a simple system," *Science* **261** (1993); Munafo, mrob.com/pub/comp/xmorphia
 - **Particle Life:** Ahmad/Mohr (2022); Ventrella, "Clusters and Chains" (2005)

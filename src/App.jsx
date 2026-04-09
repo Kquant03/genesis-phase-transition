@@ -104,6 +104,7 @@ function LandingPage({ onSelect }) {
   const [hovered, setHovered] = useState(null);
   const [musicEnabled, setMusicEnabled] = useState(false);
   const [musicPlaying, setMusicPlaying] = useState(false);
+  const [muted, setMuted] = useState(() => localStorage.getItem("genesis-muted") === "true");
   const audioRef = useRef(null);
   const musicEnabledRef = useRef(false); // ← fix: inside the component
   const heroCanvasRef = useRef(null);
@@ -120,11 +121,13 @@ function LandingPage({ onSelect }) {
     const startMusic = () => {
       if (audioRef.current && !musicEnabledRef.current) {
         musicEnabledRef.current = true;
-        audioRef.current.play().then(() => {
-          fadeAudio(audioRef.current, 0.28, 1800);
-          setMusicEnabled(true);
-          setMusicPlaying(true);
-        }).catch(e => console.log("Audio play blocked – user interaction required"));
+        if (!muted) {  // ← only autoplay if not muted
+          audioRef.current.play().then(() => {
+            fadeAudio(audioRef.current, 0.28, 1800);
+            setMusicEnabled(true);
+            setMusicPlaying(true);
+          }).catch(e => console.log("Audio play blocked – user interaction required"));
+        }
       }
       window.removeEventListener("click", startMusic);
     };
@@ -143,7 +146,11 @@ function LandingPage({ onSelect }) {
   // Toggle mute / unmute
   const toggleMusic = () => {
     if (!audioRef.current) return;
-    if (musicPlaying) {
+    const nowMuted = !muted;
+    setMuted(nowMuted);
+    localStorage.setItem("genesis-muted", nowMuted);
+
+    if (nowMuted) {
       fadeAudio(audioRef.current, 0, 500, () => {
         if (audioRef.current) audioRef.current.pause();
         setMusicPlaying(false);

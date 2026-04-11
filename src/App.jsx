@@ -2,16 +2,18 @@ import { useState, useRef, useEffect, lazy, Suspense } from "react";
 
 const SocialPhaseTransitionLab = lazy(() => import("./simulations/SocialPhaseTransitionLab.jsx"));
 const Lenia = lazy(() => import("./simulations/Lenia.jsx"));
+const LeniaExpanded = lazy(() => import("./simulations/LeniaExpanded.jsx"));
 const GrayScottRD = lazy(() => import("./simulations/GrayScottRD.jsx"));
 const ParticleLife = lazy(() => import("./simulations/ParticleLife.jsx"));
 const PrimordialParticles = lazy(() => import("./simulations/PrimordialParticles.jsx"));
 
 const SIMS = [
-  { id: "ising", label: "Ising · Phase Transitions", icon: "◈", color: "#4ecdc4", desc: "2D Ising model with Metropolis-Hastings & Wolff cluster algorithms. Tsarev social mapping." },
-  { id: "lenia", label: "Lenia", icon: "◉", color: "#f59e0b", desc: "Continuous cellular automata with FFT convolution. Smooth organic lifeforms from Gaussian ring kernels and growth functions." },
-  { id: "rd", label: "Gray-Scott RD", icon: "◎", color: "#a78bfa", desc: "Reaction-diffusion morphogenesis. Mitosis, coral, spirals, and soliton patterns from two PDEs." },
-  { id: "plife", label: "Particle Life", icon: "◆", color: "#ec4899", desc: "Asymmetric force matrices between particle types. Emergent predation, symbiosis, membranes." },
-  { id: "pps", label: "Primordial Particles", icon: "◇", color: "#34d399", desc: "One equation, two parameters. Cells that grow, divide, form spores, and self-repair." },
+  { id: "ising",   label: "Ising · Phase Transitions",   icon: "◈", color: "#4ecdc4", desc: "2D Ising model with Metropolis-Hastings & Wolff cluster algorithms. Tsarev social mapping." },
+  { id: "lenia",   label: "Lenia",                        icon: "◉", color: "#f59e0b", desc: "Continuous cellular automata. Smooth organic lifeforms from Gaussian ring kernels and growth functions. Ghost mode, σ-landscapes, seasonal oscillation." },
+  { id: "lenia-x", label: "Lenia · Expanded Universe",    icon: "✦", color: "#00eeff", desc: "Multi-channel ecosystem: prey, predator, morphogen, and a 4D Dihypersphaerome ventilans (乙超球) rotating in hyperspace and bleeding its shadow into the simulation." },
+  { id: "rd",      label: "Gray-Scott RD",                icon: "◎", color: "#a78bfa", desc: "Reaction-diffusion morphogenesis. Mitosis, coral, spirals, and soliton patterns from two PDEs." },
+  { id: "plife",   label: "Particle Life",                icon: "◆", color: "#ec4899", desc: "Asymmetric force matrices between particle types. Emergent predation, symbiosis, membranes." },
+  { id: "pps",     label: "Primordial Particles",         icon: "◇", color: "#34d399", desc: "One equation, two parameters. Cells that grow, divide, form spores, and self-repair." },
 ];
 
 function Loading() {
@@ -58,11 +60,12 @@ export default function App() {
   }
 
   const Comp = {
-    ising: SocialPhaseTransitionLab,
-    lenia: Lenia,
-    rd: GrayScottRD,
-    plife: ParticleLife,
-    pps: PrimordialParticles,
+    ising:   SocialPhaseTransitionLab,
+    lenia:   Lenia,
+    "lenia-x": LeniaExpanded,
+    rd:      GrayScottRD,
+    plife:   ParticleLife,
+    pps:     PrimordialParticles,
   }[active];
 
   return (
@@ -71,14 +74,15 @@ export default function App() {
         display: "flex", alignItems: "center", gap: 8, padding: "8px 16px",
         background: "#0a0f1a", borderBottom: "1px solid #1a2236",
         position: "sticky", top: 0, zIndex: 100,
+        overflowX: "auto",
       }}>
         <button onClick={() => setActive(null)} style={{
           background: "none", border: "1px solid #1a2236", borderRadius: 5,
           color: "#5a6b8a", padding: "4px 10px", cursor: "pointer",
           fontSize: 10, fontFamily: "'JetBrains Mono', monospace",
-          letterSpacing: "0.08em",
+          letterSpacing: "0.08em", flexShrink: 0,
         }}>← GENESIS</button>
-        <div style={{ width: 1, height: 16, background: "#1a2236" }} />
+        <div style={{ width: 1, height: 16, background: "#1a2236", flexShrink: 0 }} />
         {SIMS.map(s => (
           <button key={s.id} onClick={() => setActive(s.id)} style={{
             background: s.id === active ? s.color + "18" : "transparent",
@@ -86,7 +90,8 @@ export default function App() {
             borderRadius: 5, color: s.id === active ? s.color : "#5a6b8a",
             padding: "4px 10px", cursor: "pointer", fontSize: 9,
             fontFamily: "'JetBrains Mono', monospace", fontWeight: s.id === active ? 600 : 400,
-            letterSpacing: "0.06em", transition: "all 0.2s",
+            letterSpacing: "0.06em", transition: "all 0.2s", flexShrink: 0,
+            whiteSpace: "nowrap",
           }}>
             <span style={{ marginRight: 4 }}>{s.icon}</span>{s.label}
           </button>
@@ -106,11 +111,10 @@ function LandingPage({ onSelect }) {
   const [musicPlaying, setMusicPlaying] = useState(false);
   const [muted, setMuted] = useState(() => localStorage.getItem("genesis-muted") === "true");
   const audioRef = useRef(null);
-  const musicEnabledRef = useRef(false); // ← fix: inside the component
+  const musicEnabledRef = useRef(false);
   const heroCanvasRef = useRef(null);
   const navTimeoutRef = useRef(null);
 
-  // Create audio element and set up autoplay on first user interaction
   useEffect(() => {
     const audio = new Audio("/genesis-phase-transition/fever-intermission.mp3");
     audio.loop = false;
@@ -121,7 +125,7 @@ function LandingPage({ onSelect }) {
     const startMusic = () => {
       if (audioRef.current && !musicEnabledRef.current) {
         musicEnabledRef.current = true;
-        if (!muted) {  // ← only autoplay if not muted
+        if (!muted) {
           audioRef.current.play().then(() => {
             fadeAudio(audioRef.current, 0.28, 1800);
             setMusicEnabled(true);
@@ -143,13 +147,11 @@ function LandingPage({ onSelect }) {
     };
   }, []);
 
-  // Toggle mute / unmute
   const toggleMusic = () => {
     if (!audioRef.current) return;
     const nowMuted = !muted;
     setMuted(nowMuted);
     localStorage.setItem("genesis-muted", nowMuted);
-
     if (nowMuted) {
       fadeAudio(audioRef.current, 0, 500, () => {
         if (audioRef.current) audioRef.current.pause();
@@ -166,13 +168,10 @@ function LandingPage({ onSelect }) {
     }
   };
 
-  // Fade out and navigate when a simulation card is clicked
   const handleSelectWithFade = (simId) => {
     if (navTimeoutRef.current) return;
     if (audioRef.current && musicPlaying) {
-      fadeAudio(audioRef.current, 0, 700, () => {
-        onSelect(simId);
-      });
+      fadeAudio(audioRef.current, 0, 700, () => { onSelect(simId); });
     } else {
       onSelect(simId);
     }
@@ -208,7 +207,6 @@ function LandingPage({ onSelect }) {
       [0.3, -0.1, 0.2, -0.2, 0.0],
     ];
     const rMax = 120, beta = 0.3, friction = 0.6;
-
     let raf;
     const loop = () => {
       for (let i = 0; i < N; i++) {
@@ -233,7 +231,6 @@ function LandingPage({ onSelect }) {
         px[i] = ((px[i] + vx[i]) % W + W) % W;
         py[i] = ((py[i] + vy[i]) % H + H) % H;
       }
-
       ctx.fillStyle = "rgba(6,10,18,0.08)";
       ctx.fillRect(0, 0, W, H);
       for (let i = 0; i < N; i++) {
@@ -280,7 +277,7 @@ function LandingPage({ onSelect }) {
         </div>
       </div>
 
-      {/* Hero section with canvas */}
+      {/* Hero section */}
       <div style={{ position: "relative", width: "100%", overflow: "hidden" }}>
         <canvas
           ref={heroCanvasRef}
@@ -308,10 +305,10 @@ function LandingPage({ onSelect }) {
           </h1>
           <div style={{ fontSize: 14, color: "#8a9bba", marginTop: 16, lineHeight: 1.7, fontFamily: "'DM Sans', sans-serif", fontWeight: 300 }}>
             A multi-dimensional artificial life laboratory.<br />
-            Five substrates. One garden. Infinite structures.
+            Six substrates. One garden. Infinite structures.
           </div>
           <div style={{ marginTop: 20, fontSize: 10, color: "#4a5b7a", fontFamily: "'JetBrains Mono', monospace", letterSpacing: "0.08em" }}>
-            Ising · Lenia · Gray-Scott · Particle Life · Primordial Particles
+            Ising · Lenia · Lenia Expanded · Gray-Scott · Particle Life · Primordial Particles
           </div>
           <a
             href="https://github.com/Kquant03/genesis-phase-transition"
@@ -391,7 +388,7 @@ function LandingPage({ onSelect }) {
       }}>
         Built by Stanley · Kquant03 · Replete AI<br />
         Part of the Teármann Research Ecosystem<br />
-        After Tsarev et al. (2019) · Chan (2018) · Pearson (1993) · Schmickl et al. (2016)
+        After Tsarev et al. (2019) · Chan (2018, 2020) · Pearson (1993) · Schmickl et al. (2016)
       </div>
     </div>
   );

@@ -114,7 +114,7 @@ G₀ += A₃·hyperMix·0.4             4D shadow seeds prey nucleation
 Ã   = advect(A, ∇A·Φ)             flow advection on all channels
 ```
 
-**About *Dihypersphaerome ventilans*:** DV is one of the rarest organisms in the Lenia taxonomy — a named 4D species whose behavior class is SO (Stationary Oscillation), subcategory *ventilans* (Latin: to fan, to breathe, to ventilate). It does not translate or rotate. It breathes. Its defining feature is a three-shell kernel with β = [1/12, 1/6, 1]: the outer ring weight is **12× stronger than the inner ring**, making the organism's boundary more important to its physics than its interior. It knows where it ends far better than it knows what it contains. [**→ Read the full DV species paper**](docs/Dihypersphaerome_ventilans-1.pdf)
+**About *Dihypersphaerome ventilans*:** DV is one of the rarest organisms in the Lenia taxonomy — a named 4D species whose behavior class is SO (Stationary Oscillation), subcategory *ventilans* (Latin: to fan, to breathe, to ventilate). It does not translate or rotate. It breathes. Its defining feature is a three-shell kernel with β = [1/12, 1/6, 1]: the outer ring weight is **12× stronger than the inner ring**, making the organism's boundary more important to its physics than its interior. It knows where it ends far better than it knows what it contains. [**→ Read the full DV species paper**](docs/dv_species.md)
 
 The 4D hyperrotation controls in the right panel let you adjust the three rotation axes (XW, YW, ZW) independently, varying the appearance of its 2D cross-section from a faint ring at equatorial observation to near-nothing at the poles. The ZW rotation IS the breathing — adjusting its speed changes the ventilation rate.
 

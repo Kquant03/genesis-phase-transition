@@ -6,6 +6,7 @@ const LeniaExpanded = lazy(() => import("./simulations/LeniaExpanded.jsx"));
 const GrayScottRD = lazy(() => import("./simulations/GrayScottRD.jsx"));
 const ParticleLife = lazy(() => import("./simulations/ParticleLife.jsx"));
 const PrimordialParticles = lazy(() => import("./simulations/PrimordialParticles.jsx"));
+const FilterSimulation = lazy(() => import("./simulations/FilterSimulation.jsx"));
 
 const SIMS = [
   { id: "ising",   label: "Ising · Phase Transitions",   icon: "◈", color: "#4ecdc4", desc: "2D Ising model with Metropolis-Hastings & Wolff cluster algorithms. Tsarev social mapping." },
@@ -14,6 +15,7 @@ const SIMS = [
   { id: "rd",      label: "Gray-Scott RD",                icon: "◎", color: "#a78bfa", desc: "Reaction-diffusion morphogenesis. Mitosis, coral, spirals, and soliton patterns from two PDEs." },
   { id: "plife",   label: "Particle Life",                icon: "◆", color: "#ec4899", desc: "Asymmetric force matrices between particle types. Emergent predation, symbiosis, membranes." },
   { id: "pps",     label: "Primordial Particles",         icon: "◇", color: "#34d399", desc: "One equation, two parameters. Cells that grow, divide, form spores, and self-repair." },
+  { id: "filter",  label: "The Filter",                   icon: "◬", color: "#fbbf24", desc: "Ghost layer as selection geometry. Civilizations as agents in (expansion, coupling) space. Watch the filter select out grabby lineages in real time; run the phase-diagram sweep live." },
 ];
 
 function Loading() {
@@ -66,6 +68,7 @@ export default function App() {
     rd:      GrayScottRD,
     plife:   ParticleLife,
     pps:     PrimordialParticles,
+    filter:  FilterSimulation,
   }[active];
 
   return (

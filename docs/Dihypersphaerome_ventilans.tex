@@ -1,0 +1,917 @@
+% ============================================================
+%  Dihypersphaerome ventilans (3Hy2v, 乙超球)
+%  A 4D Lenia Species: Characterization, Hyperrotation Simulation,
+%  and Multi-Channel Ecosystem Integration
+%
+%  Stanley Sebastian & Claude
+%  Replete AI · Genesis Artificial Life Laboratory
+%  Teármann Research Ecosystem · Internal Report · April 2026
+%
+%  Compile with:  xelatex DV.tex  (twice, for refs)
+% ============================================================
+
+\documentclass[11pt,a4paper]{article}
+
+% ---------- ENGINE: XeLaTeX, for CJK + OTF fonts -------------
+\usepackage{fontspec}
+\usepackage{xeCJK}
+
+% ---------- GEOMETRY -----------------------------------------
+\usepackage[a4paper,margin=2.3cm,top=2.6cm,bottom=2.6cm,
+            headheight=14pt,headsep=14pt]{geometry}
+
+% ---------- FONTS --------------------------------------------
+% Main body: EB Garamond if available, otherwise Latin Modern Roman.
+\IfFontExistsTF{EB Garamond}{%
+  \setmainfont[Ligatures=TeX, Numbers=OldStyle]{EB Garamond}%
+}{%
+  \setmainfont{Latin Modern Roman}%
+}
+% Sans for small caps running heads / technical captions
+\setsansfont[Scale=0.9]{Latin Modern Sans}
+% Mono for code blocks
+\setmonofont[Scale=0.86]{Latin Modern Mono}
+% CJK --- for 乙超球
+\setCJKmainfont{Noto Serif CJK SC}
+
+% ---------- COLORS (teal/gold palette, subdued) --------------
+\usepackage[table]{xcolor}
+\definecolor{accent}{HTML}{2F7F8A}       % muted teal
+\definecolor{accentgold}{HTML}{B08838}   % muted gold
+\definecolor{rule}{HTML}{9BA9AE}         % soft rule color
+\definecolor{codebg}{HTML}{F4F1EB}       % parchment code bg
+\definecolor{codeframe}{HTML}{CFC9BC}
+\definecolor{muted}{HTML}{5A5F64}
+\definecolor{headinc}{HTML}{1E2A2E}
+
+% ---------- PACKAGES -----------------------------------------
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{titlesec}
+\usepackage{fancyhdr}
+\usepackage{enumitem}
+\usepackage{listings}
+\usepackage{microtype}
+\usepackage{parskip}
+\usepackage[breaklinks=true,colorlinks=true,
+            linkcolor=accent,citecolor=accent,urlcolor=accent]{hyperref}
+\usepackage[authoryear,round]{natbib}
+\bibpunct{(}{)}{;}{a}{,}{,}
+\usepackage{setspace}
+\setstretch{1.08}
+
+% ---------- SECTION STYLING ----------------------------------
+\titleformat{\section}
+  {\normalfont\large\bfseries\color{headinc}}
+  {\textcolor{accentgold}{\rmfamily\S\thesection}}{0.7em}{}
+  [\vspace{-2pt}\textcolor{rule}{\rule{\linewidth}{0.3pt}}]
+\titleformat{\subsection}
+  {\normalfont\normalsize\bfseries\color{headinc}}
+  {\textcolor{accent}{\thesubsection}}{0.6em}{}
+\titleformat{\subsubsection}
+  {\normalfont\normalsize\itshape\color{headinc}}
+  {}{0em}{}
+\titlespacing*{\section}{0pt}{22pt}{10pt}
+\titlespacing*{\subsection}{0pt}{14pt}{4pt}
+\titlespacing*{\subsubsection}{0pt}{10pt}{2pt}
+
+% ---------- RUNNING HEADERS ----------------------------------
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\sffamily\footnotesize\textcolor{muted}{\textsc{Dihypersphaerome ventilans}}}
+\fancyhead[R]{\sffamily\footnotesize\textcolor{muted}{\textsc{Teármann Internal · 2026}}}
+\fancyfoot[C]{\sffamily\footnotesize\textcolor{muted}{\thepage}}
+\renewcommand{\headrulewidth}{0.2pt}
+\renewcommand{\headrule}{\hbox to\headwidth{\color{rule}\leaders\hrule height\headrulewidth\hfill}}
+
+% ---------- CODE LISTINGS ------------------------------------
+\lstdefinestyle{classy}{
+  basicstyle=\ttfamily\footnotesize\color{headinc},
+  backgroundcolor=\color{codebg},
+  frame=single,
+  framesep=6pt,
+  rulecolor=\color{codeframe},
+  xleftmargin=10pt,
+  xrightmargin=6pt,
+  aboveskip=10pt,
+  belowskip=10pt,
+  keywordstyle=\color{accent}\bfseries,
+  commentstyle=\color{muted}\itshape,
+  stringstyle=\color{accentgold},
+  showstringspaces=false,
+  breaklines=true,
+  breakatwhitespace=true,
+  columns=fullflexible,
+  keepspaces=true,
+  tabsize=2,
+  captionpos=b,
+}
+\lstset{style=classy}
+\lstdefinelanguage{glsl}{
+  morekeywords={vec2,vec3,vec4,float,int,uniform,in,out,void,return,
+    texture,sin,cos,length,pow,exp,clamp,fract,mix,grad,curl,atan,
+    outColor,const,if,else,for},
+  morecomment=[l]{//},
+  morestring=[b]",
+}
+\lstdefinelanguage{pseudo}{
+  morekeywords={for,if,else,return,where,in,sum},
+  morecomment=[l]{//},
+}
+
+% ---------- CUSTOM BOXES (callout panels) --------------------
+\usepackage[skins,breakable]{tcolorbox}
+
+\newtcolorbox{callout}[1][]{
+  enhanced, breakable,
+  colback=codebg, colframe=accent!40!codeframe,
+  boxrule=0.4pt, arc=2pt, left=10pt, right=10pt,
+  top=8pt, bottom=8pt,
+  fonttitle=\sffamily\bfseries\color{accent},
+  coltitle=accent,
+  title={#1},
+}
+
+\newtcolorbox{specimenbox}{
+  enhanced, breakable,
+  colback=codebg!50!white, colframe=accentgold!50!codeframe,
+  boxrule=0.4pt, arc=2pt, left=14pt, right=14pt, top=10pt, bottom=10pt,
+}
+
+% ---------- EPIGRAPH MACRO -----------------------------------
+\newcommand{\epigraph}[2]{%
+  \par\vspace{6pt}\hfill
+  \begin{minipage}{0.7\linewidth}
+    \raggedleft\itshape\small\textcolor{muted}{#1}\\[2pt]
+    \normalfont\upshape\footnotesize\textcolor{muted}{\textemdash\ #2}
+  \end{minipage}\par\vspace{10pt}
+}
+
+% ---------- KEYWORDS STYLE -----------------------------------
+\newcommand{\spc}[1]{\textit{#1}}  % species italics
+\newcommand{\ventilans}{\textit{ventilans}}
+\newcommand{\DV}{\spc{D.\ ventilans}}
+\newcommand{\SO}{\textsc{so}}
+
+% ---------- DOCUMENT -----------------------------------------
+\begin{document}
+
+% ============================================================
+%  TITLE PAGE (restrained, single page)
+% ============================================================
+\thispagestyle{empty}
+\vspace*{1.2cm}
+
+\begin{center}
+  {\sffamily\footnotesize\textcolor{muted}{\textsc{Teármann Research Ecosystem \,\textperiodcentered\, Internal Technical Report}}}\\[3pt]
+  {\sffamily\footnotesize\textcolor{muted}{\textsc{Genesis Artificial Life Laboratory}}}\\[28pt]
+
+  {\color{rule}\rule{0.3\linewidth}{0.3pt}}\\[26pt]
+
+  {\fontsize{30}{34}\selectfont\scshape\color{headinc}
+    Dihypersphaerome ventilans}\\[12pt]
+  {\LARGE\color{accent}\scshape{3\textsc{Hy}2v \,\textperiodcentered\, 乙超球 \,\textperiodcentered\, Second Hypersphere}}\\[22pt]
+
+  \begin{minipage}{0.82\linewidth}
+    \centering\itshape\large\color{headinc}
+    A four-dimensional Lenia species: characterization from first principles,
+    analytical hyperrotation rendering, and integration as a seeding layer
+    for a multi-channel two-dimensional ecosystem.
+  \end{minipage}\\[32pt]
+
+  {\color{rule}\rule{0.3\linewidth}{0.3pt}}\\[32pt]
+
+  {\large Stanley Sebastian \,\textperiodcentered\, Claude}\\[4pt]
+  {\sffamily\small\textcolor{muted}{Replete AI \,\textperiodcentered\, Genesis Artificial Life Laboratory}}\\[2pt]
+  {\sffamily\small\textcolor{muted}{Teármann Research Ecosystem}}\\[18pt]
+  {\sffamily\footnotesize\textcolor{muted}{Internal Report \,\textperiodcentered\, April 2026}}
+\end{center}
+
+\vfill
+
+\begin{center}
+\begin{minipage}{0.82\linewidth}
+  \small\color{muted}
+  \textsc{Abstract.}\,\itshape
+  \spc{Dihypersphaerome ventilans} (code 3\textsc{Hy}2v, 乙超球,
+  \textit{second hypersphere}) is a spatially localized pattern discovered by
+  Bert Wang-Chak Chan in four-dimensional Lenia \citep{chan2020}. It exhibits
+  stationary oscillation --- \SO-class behavior designated \ventilans\
+  (Latin, \textit{to fan, to breathe}) --- pulsing rhythmically in place
+  without translation or rotation. Its defining feature is a three-shell
+  kernel with $\boldsymbol{\beta} = (\tfrac{1}{12},\tfrac{1}{6},1)$: the
+  outer ring is twelvefold stronger than the inner, making the organism's
+  \textit{boundary} more important to its physics than its interior. We
+  characterize the species from first principles, derive the ecological
+  significance of its narrow survival band $(\sigma=0.033)$, describe an
+  analytical 4D hyperrotation simulation approach implemented in WebGL2
+  shaders, and document its integration as a seeding layer for a
+  multi-channel 2D ecosystem. The organism seeds the world it moves through
+  without being visible in it.
+\end{minipage}
+\end{center}
+
+\vspace{10pt}
+\begin{center}
+  {\sffamily\footnotesize\color{muted}
+  \textsc{Keywords}: Lenia \,\textperiodcentered\, 4D cellular automata \,\textperiodcentered\, artificial life \,\textperiodcentered\,
+  hyperrotation \,\textperiodcentered\, predator--prey ecology \,\textperiodcentered\, morphogenetic fields \,\textperiodcentered\, flow advection}
+\end{center}
+
+\newpage
+% ============================================================
+
+\section{Discovery and Context}
+
+\begin{specimenbox}
+\sffamily\footnotesize\color{headinc}
+\textsc{Specimen Record \,\textperiodcentered\, Lenia Expanded Universe \,\textperiodcentered\, Class 4D}\\[6pt]
+\begin{tabularx}{\linewidth}{@{}l>{\raggedright\arraybackslash}X@{}}
+\toprule
+Species            & \textit{Dihypersphaerome ventilans}\\
+Code               & 3\textsc{Hy}2v\\
+Chinese            & 乙超球 (\textit{Y\v{\i} Ch\={a}o Qi\'u}) --- \textit{second hypersphere}\\
+Domain             & Simulata $\rightarrow$ Lenia $\rightarrow$ 4D\\
+Behavior class     & \SO\ --- stationary oscillation\\
+Subcategory        & \ventilans\ (ventilating / breathing)\\
+Source             & \citet{chan2020}, \texttt{animals4D.json}\\
+Discovery          & Semi-automatic search, 4D parameter space\\
+Dimensional        & 4D toroidal grid $(N^{4})$\\
+Rarity             & Named species --- extremely rare\\
+\bottomrule
+\end{tabularx}
+\end{specimenbox}
+
+Chan's 2020 \textsc{alife} paper \textit{Lenia and Expanded Universe}
+extended the original two-dimensional Lenia framework to higher dimensions,
+multiple kernels, and multiple coupled channels --- discovering phenomena
+including polyhedral symmetries, individuality, self-replication, emission,
+growth by ingestion, and \textit{virtual eukaryotes} with internal division
+of labor. Among the 4D organisms discovered through semi-automatic search,
+\DV\ stands apart: it does not move, does not grow, does not divide. It
+\textit{breathes}.
+
+The species code \textsc{3Hy2v} encodes its architecture precisely: three
+peak kernel shells; \textsc{Hy} (\textit{hyper}, higher-dimensional); the
+\textsc{2} denoting second genus in the family; \texttt{v} for \ventilans.
+The Chinese name 乙超球 translates as \emph{second-class hypersphere},
+where 乙 is the second Heavenly Stem (used in ordering like A, B, C) and
+超球 is \emph{hypersphere}. It is, formally, the \textit{second}
+hyperspherical organism in Chan's taxonomy.
+
+Its extreme rarity follows from its dimensional requirements. Standard 2D
+Lenia observers never encounter it --- its 2D cross-sections are near-empty
+at the poles of its 4D body. The organism reveals itself only when observed
+from the \emph{equatorial} hyperplane, and even then only as a faint ring
+structure. Most searches that would find an \spc{Orbium}, a \spc{Scutium}, or
+an \spc{Ignis} in 2D pass through \DV's parameter neighborhood without
+registering its existence.
+
+\begin{callout}[The observational geometry problem]
+\DV\ cannot be observed directly in 2D. A 4D organism projects into the 2D
+observation plane as a cross-sectional slice whose shape depends entirely
+on the orientation of the cutting hyperplane. At the poles of the 4D body
+the cross-section reduces to a point or vanishes; at the equatorial plane
+it reveals the full ring structure. Most 2D observers --- and most
+automated parameter searches --- pass through \DV's niche without
+registering its existence.
+
+The \textit{echolocation ring} overlay in Genesis renders this problem
+visible: three concentric circles at radii $R/3$, $2R/3$, and $R$
+(weighted by $\beta_{1},\beta_{2},\beta_{3}$ respectively) show the
+organism's kernel geometry as a spatial overlay. What you are seeing is
+the \emph{sensory field} --- the geometry by which \DV\ perceives its own
+neighborhood at each moment of its ventilating cycle.
+\end{callout}
+
+\section{Parameters and the Shell Kernel}
+
+\begin{table}[h!]
+\small\sffamily
+\renewcommand{\arraystretch}{1.25}
+\begin{tabularx}{\linewidth}{@{}lll>{\raggedright\arraybackslash}X@{}}
+\toprule
+\textsc{Param} & \textsc{Value} & \textsc{Role} & \textsc{Ecological interpretation}\\
+\midrule
+$R$          & $10$    & Radius       & Neighborhood radius. Medium range --- neither the slow giants at $R=20$ nor the twitchy sprinters at $R=5$.\\
+$T$          & $10$    & Time         & $dt=1/T=0.1$. Moderate temporal sampling; the breath cycle is visible at real time.\\
+$\beta_{1}$  & $1/12$  & Inner ring   & Weight $0.083$. Barely a whisper --- this ring is almost acoustically silent.\\
+$\beta_{2}$  & $1/6$   & Middle ring  & Weight $0.167$. Dim --- secondary structural sensing.\\
+\rowcolor{codebg}$\boldsymbol{\beta_{3}}$ & $\mathbf{1}$ & \textbf{Outer ring} & \textbf{Dominant.} $12\times$ inner, $6\times$ middle. \textit{The organism \emph{is} its surface.}\\
+$\mu$        & $0.18$  & Growth centre & Each cell ``wants'' average activation $0.18$ in its outer-ring neighborhood to be in homeostasis.\\
+$\sigma$     & $0.033$ & Tolerance    & \textsc{Very} narrow: $G=0$ at $u=0.147$ and $u=0.213$. Window $=0.066$ units. Among the tightest in the taxonomy.\\
+\bottomrule
+\end{tabularx}
+\caption{\small Canonical parameters for \DV\ from \citet{chan2020},
+\texttt{animals4D.json}, code 3\textsc{Hy}2v. The highlighted row
+$\beta_{3}=1$ is the defining constraint of the species.}
+\end{table}
+
+\subsection{The shell kernel formula}
+
+The kernel value at normalized radius $r\in[0,1)$ from the organism's
+centre is a three-shell partition of Chan's standard exponential bump:
+\begin{equation}
+K(r) \;=\; \beta_{k}\cdot
+\exp\!\Bigl(\,4-\frac{4}{4\,t\,(1-t)}\Bigr),
+\qquad
+\begin{cases}
+k = \lfloor r n \rfloor & \text{(ring index)}\\
+t = r n - k & \text{(local position in ring)}\\
+n = 3 & \text{(number of shells)}
+\end{cases}
+\end{equation}
+with $\boldsymbol{\beta}=(\tfrac{1}{12},\tfrac{1}{6},1)$ and outer-ring
+dominance $\beta_{3}/\beta_{1}=12$. The core function $\exp\!\bigl(4 -
+4/(4r(1-r))\bigr)$ is zero at $r=0$ and $r=1$ (ring boundaries), peaks at
+$r=0.5$ within each partition, and is infinitely smooth everywhere. After
+normalization (dividing by the sum of all kernel weights over the grid),
+the outer ring's \emph{dominance} is preserved but the kernel itself
+integrates to unity over the full neighborhood, so the potential field
+$U$ remains in $[0,1]$ regardless of the $\beta$ distribution.
+
+\subsection{Acoustic silence of the interior}
+
+A cell at the centre of the organism ($r=0$ relative to its neighbors'
+positions) contributes almost nothing to those neighbors' potential
+computations --- because the kernel value at $r\approx 0$ (inner ring,
+weight $1/12$) is tiny. Conversely, a cell at the organism's surface
+($r\approx 5R/6\approx 8.3$ cells from any given internal cell)
+contributes enormously, with kernel weight near $1.0$.
+
+This is the defining biology of \DV: \textbf{the skin does all the
+sensing.} The interior is nearly acoustically isolated from its own
+neighborhood potential. A useful analogy: imagine a starfish whose neural
+network lives entirely in its arm tips and whose body core can barely feel
+itself. \DV\ experiences its own existence at its boundary, not its
+centre. The hyperspherical shell geometry enforces this --- in 4D, surface
+area scales as $r^{3}$ while volume scales as $r^{4}$, making the surface
+an even larger fraction of the total structure than it is in 3D.
+
+\subsection{The narrow survival band}
+
+The growth function for Lenia is the standard Gaussian-difference form
+\begin{equation}
+G(u) \;=\; 2\,\exp\!\Bigl(-\frac{(u-\mu)^{2}}{2\sigma^{2}}\Bigr) - 1.
+\end{equation}
+For \DV, $\mu=0.18$, $\sigma=0.033$, yielding zero-crossings
+\begin{equation}
+u_{\text{low,\,high}} \;=\; \mu \pm \sigma\sqrt{2\ln 2}
+\;=\; 0.147,\ 0.213,
+\end{equation}
+i.e.\ a survival window of $0.066$ units in potential space. This is
+narrow but not extreme among named species: \spc{Orbium} at $\sigma=0.017$
+has a window of $\sim 0.023$; \spc{Ignis} at $\sigma=0.012$, a window of
+$\sim 0.016$ (among the tightest on record).
+
+What distinguishes \DV's situation is that this narrow band must be
+maintained simultaneously across \emph{all 2D cross-sections of a 4D body}.
+In a 4D grid, a hyperspherical pattern generates potential gradients in
+four independent directions at once. The pattern can only sustain itself
+if its 4D geometry keeps every cell's potential within $[0.147, 0.213]$
+at all times despite the four-dimensional interference of its own shell
+rings. This is the constraint that makes \DV\ a 4D organism rather than
+a 2D one.
+
+\section{Four-Dimensional Biology}
+
+A 4D Lenia organism exists on a toroidal grid of four spatial dimensions.
+Its body is a \emph{soliton} --- a self-sustaining spatially localized
+pattern --- in four-dimensional continuous space. Observation requires
+choosing a cutting hyperplane: a 2D subspace of the 4D space. The
+cross-section depends entirely on which hyperplane is chosen and at what
+orientation.
+
+\subsection{Hyperspherical shell structure}
+
+\DV's 4D body is nested 3-spheres ($S^{3}$): the same relationship that
+holds between a circle ($S^{1}$) and a disk in 2D, or a sphere ($S^{2}$)
+and a ball in 3D. The three $\beta$ rings correspond to three nested
+$S^{3}$ surfaces:
+
+\begin{table}[h!]
+\small\sffamily
+\renewcommand{\arraystretch}{1.25}
+\begin{tabularx}{\linewidth}{@{}l c c >{\raggedright\arraybackslash}X l@{}}
+\toprule
+\textsc{Shell} & \textsc{4D Radius} & \textsc{$\beta$ Weight} &
+\textsc{2D Cross-section} & \textsc{Role}\\
+\midrule
+\rowcolor{codebg}
+Outer $S^{3}$  & $\sim 5R/6$ & $1.000$ & Bright ring at equator      & Dominant sensing surface\\
+Middle $S^{3}$ & $\sim R/2$  & $0.167$ & Faint inner ring            & Secondary structure\\
+Inner $S^{3}$  & $\sim R/6$  & $0.083$ & Barely visible disk         & Ghost of a core\\
+\bottomrule
+\end{tabularx}
+\caption{\small 4D shell structure of \DV. The outer $S^{3}$ row is
+highlighted because $\beta_{3}=1.0$ makes it the dominant feature --- twelvefold brighter than the inner shell.}
+\end{table}
+
+\subsection{The ventilating oscillation --- mechanism}
+
+The \ventilans\ behavior is a limit cycle in the 4D state space. The
+mechanism: the hyperspherical body expands slightly, pushing cells at its
+outer $S^{3}$ shell into regions of lower potential (the neighborhood
+density thins as the shell enlarges). When $U$ drops below $\mu-\sigma$
+at those cells, $G$ turns negative; the shell contracts. Overshoot is
+guaranteed by the finite time step $dt=0.1$. The system oscillates around
+the fixed point where every cell's potential exactly equals $\mu=0.18$.
+
+The period of oscillation depends on the local slope of $G$ at $\mu$ ---
+which is $0$ at the centre ($G$ is maximally flat at its peak) --- and on
+$dt$. For \DV's parameters the breath cycle completes approximately every
+$30$--$40$ simulation steps at $\text{spf}=1$, $dt=0.1$, corresponding to
+real time on the order of seconds in the Genesis display running at
+$60\,$fps.
+
+\subsection{Dimensional comparison}
+
+\begin{table}[h!]
+\small\sffamily
+\renewcommand{\arraystretch}{1.2}
+\begin{tabularx}{\linewidth}{@{}l c c c@{}}
+\toprule
+\textsc{Property} & \textit{D.\ ventilans} (4D) & \textit{Hexalapillium} (2D) & Typical \textit{Orbium} (2D)\\
+\midrule
+Dimension      & \cellcolor{codebg}4D toroidal & 2D toroidal    & 2D toroidal\\
+Behavior       & \cellcolor{codebg}\SO: \ventilans & \SO: \ventilans & \textsc{to}: translating\\
+Symmetry       & \cellcolor{codebg}$O(4)$ hyper & Radial         & Bilateral\\
+Kernel peaks   & \cellcolor{codebg}3 ($\beta$-vector) & 1 (single) & 1 (single)\\
+$\beta_{3}$    & \cellcolor{codebg}$1.0$ (dominant) & $1.0$       & $1.0$\\
+$\sigma$       & \cellcolor{codebg}$0.033$ & $\sim\!0.020$       & $0.017$\\
+$R$            & \cellcolor{codebg}$10$   & $\sim\!8$           & $13$\\
+Cross-section  & \cellcolor{codebg}Ring $\to$ point & Disk       & Disk\\
+Rarity         & \cellcolor{codebg}Extremely rare & Rare         & Common\\
+\bottomrule
+\end{tabularx}
+\caption{\small Comparison of \DV\ with related \SO\ species. Shaded column:
+key distinction --- $O(4)$ symmetry makes \DV\ orientation-free. No
+preferred axis in 4D.}
+\end{table}
+
+\section{Simulation Architecture}
+
+A true 4D Lenia simulation on a $256^{4}$ grid would require
+$4{,}294{,}967{,}296$ cells --- computationally intractable in real-time
+WebGL2. Genesis uses an \emph{analytical 4D hyperrotation} approach:
+\DV's density is approximated analytically from its known shell geometry,
+and its temporal evolution is modeled as rigid 4D rotation. This
+correctly produces the ventilating oscillation in 2D projection.
+
+\subsection{HYPER\_FRAG shader pipeline}
+
+\begin{lstlisting}[language=glsl, caption={\textsc{hyper\_frag} --- WebGL2 fragment shader, runs per pixel per frame.}]
+// Step 1: Map UV pixel to centered 4D position
+vec2 xy = (v_uv - 0.5) * 2.2;           // scale to [-1.1, 1.1]
+vec4 p4 = vec4(xy.x, xy.y, 0.0, u_wSlice);
+
+// Step 2: Apply 4D rotations (3 independent planes)
+p4 = rotXW(p4, u_rotXW);                // lateral tumble X
+p4 = rotYW(p4, u_rotYW);                // lateral tumble Y
+p4 = rotZW(p4, u_rotZW);                // THE BREATH - ZW rotation
+
+// Step 3: Sample analytical DV density at rotated 4D position
+float r     = length(p4) / u_R4D;
+float outer = exp(-pow((r - 0.85) / 0.08, 2.0)) * 1.000;
+float mid   = exp(-pow((r - 0.55) / 0.10, 2.0)) * 0.167;
+float inner = exp(-pow((r - 0.20) / 0.12, 2.0)) * 0.083;
+float density = clamp(outer + mid + inner, 0.0, 1.0);
+
+outColor = vec4(density, density, density, 1.0);  // ch3 texture
+\end{lstlisting}
+
+The \textsc{zw} rotation \emph{is} the breathing. As \texttt{u\_rotZW}
+accumulates, the 4D body's $W$-axis sweeps through the observation plane
+and the cross-section ring pulses in and out exactly as the true 4D \SO\
+dynamics would produce. The \textsc{xw} and \textsc{yw} rotations are
+smaller and add the lateral tumbling characteristic of full 4D dynamics.
+Setting all rotation rates to zero freezes \DV\ at a static cross-section,
+showing only its equatorial ring structure.
+
+\subsection{The 4D rotation matrices}
+
+\begin{lstlisting}[language=glsl, caption={4D rotation matrices in \textsc{glsl}. The \textsc{zw} plane carries the breath; \textsc{xw}/\textsc{yw} add asymmetric tumble.}]
+// Rotation in XW plane (x-axis tilts into W dimension)
+vec4 rotXW(vec4 p, float a) {
+  return vec4(cos(a)*p.x - sin(a)*p.w,
+              p.y, p.z,
+              sin(a)*p.x + cos(a)*p.w);
+}
+
+// Rotation in ZW plane - primary breathing rotation
+vec4 rotZW(vec4 p, float a) {
+  return vec4(p.x, p.y,
+              cos(a)*p.z - sin(a)*p.w,
+              sin(a)*p.z + cos(a)*p.w);
+}
+
+// Accumulated angle each frame: theta += speed * 0.016
+// Default ZW speed = 0.18 rad/s  =>  ~35s per full rotation
+\end{lstlisting}
+
+\subsection{Interface controls}
+
+\begin{table}[h!]
+\small\sffamily
+\renewcommand{\arraystretch}{1.25}
+\begin{tabularx}{\linewidth}{@{}l l l >{\raggedright\arraybackslash}X@{}}
+\toprule
+\textsc{Control} & \textsc{Range} & \textsc{Default} & \textsc{Effect}\\
+\midrule
+\textsc{zw} rotation & $0$–$0.8$   & $0.18$ rad/s & Breathing rate. $0.18 \approx 1$ breath / $35$ sim-sec\\
+\textsc{xw} rotation & $0$–$0.4$   & $0.05$ rad/s & Lateral $X$ tumble --- asymmetric cross-sections\\
+\textsc{yw} rotation & $0$–$0.4$   & $0.07$ rad/s & Lateral $Y$ tumble --- breaks circular symmetry\\
+$W$ slice            & $-1.0$–$1.0$ & $0.0$        & Resting hyperplane. $0$ = equatorial (max visibility)\\
+4D amplitude         & $0$–$1.5$   & $0.65$        & Density of projected 4D shadow in ch3\\
+4D bleed             & $0$–$0.5$   & $0.12$        & Coupling from ch3 into prey ch0 --- seeding strength\\
+\bottomrule
+\end{tabularx}
+\caption{\small 4D simulation interface controls in Genesis. The 4D bleed
+parameter is the causal bridge from the 4D body to the 2D ecosystem.}
+\end{table}
+
+\section{Multi-Channel Ecosystem Integration}
+
+The Genesis Lenia Expanded Universe substrate runs four coupled channels
+simultaneously on a shared $256\times 256$ RGBA float texture (one
+\texttt{RGBA32F} pixel per simulation cell):
+
+\begin{table}[h!]
+\small\sffamily
+\renewcommand{\arraystretch}{1.25}
+\begin{tabularx}{\linewidth}{@{}l l l >{\raggedright\arraybackslash}X@{}}
+\toprule
+\textsc{Channel} & \textsc{Color} & \textsc{Species} & \textsc{Kernel \& parameters}\\
+\midrule
+R (ch0)    & Gold / amber       & Prey (\spc{Orbium}-class) & $R{=}13$,\ $\beta{=}(1)$,\ $\mu{=}0.15$,\ $\sigma{=}0.017$\\
+G (ch1)    & Electric cyan      & Predator (\spc{Ignis}-like) & $R{=}15$,\ $\beta{=}(\tfrac{1}{3},\tfrac{2}{3},1)$,\ $\mu{=}0.26$,\ $\sigma{=}0.036$\\
+B (ch2)    & Deep teal          & Morphogen (diffuse)     & $R{=}20$,\ $\beta{=}(1,0.5,0.1)$,\ $\mu{=}0.15$,\ $\sigma{=}0.028$\\
+\rowcolor{codebg}
+A (ch3)    & Violet / white     & \textit{D.\ ventilans} (4D) & Analytical hyperrotation, $R_{\!4\mathrm{D}}{=}0.85$, $\omega_{\!\mathrm{zw}}{=}0.18$\\
+\bottomrule
+\end{tabularx}
+\caption{\small Four-channel state layout. \DV\ is the only channel
+computed analytically rather than via convolution.}
+\end{table}
+
+\subsection{Cross-channel coupling equations}
+
+\begin{lstlisting}[language=pseudo, caption={\textsc{sim\_frag} --- the full update rule, per simulation step. \texttt{hyperMix} is the causal dial from 4D shadow to 2D ecology.}]
+// Channel 0: Prey
+U0 = K0 * A0                                // convolve prey kernel
+G0 = grow(U0, mu0, sigma0_eff)              // growth at effective sigma
+G0 -= c01 * A1                              // predator suppresses prey
+G0 += A3 * hyperMix * 0.4                   // 4D shadow seeds nucleation
+
+// Channel 1: Predator
+U1 = K1 * A1                                // convolve predator kernel
+G1 = grow(U1, mu1, sigma1_eff)
+G1 += c10 * A0 - 0.012                      // prey feeds predator; starvation
+
+// Channel 2: Morphogen
+U2 = K2 * A2                                // wide diffuse convolution
+sigma0_eff = sigma0 * (1 + c20 * (A2 - 0.3))// morphogen widens prey niche
+
+// Advection (applied before convolution, all channels)
+phi = FLOW_FRAG(A0, A2)                     // velocity from gradients
+A   = advect(A, grad(A) dot phi)            // Eulerian backward advection
+\end{lstlisting}
+
+The \texttt{hyperMix} parameter is the causal bridge between the 4D and 2D
+worlds. At $\texttt{hyperMix}=0$, ch3 (\DV) is cosmetic --- a violet
+overlay with no coupling. As \texttt{hyperMix} increases, the 4D shadow
+actively nudges prey activation wherever the rotating \DV\ body intersects
+the 2D plane. Since this intersection pulses spatially and temporally as
+\textsc{zw} rotation proceeds, the prey nucleation sites move around the
+field in synchrony with \DV's breath.
+
+\subsection{The DV Seed preset --- emergence from hyperspace}
+
+The most striking demonstration is the \textsc{dv seed} initial condition:
+all 2D channels begin empty. Only ch3 is initialized with the analytical
+\DV\ ring structure at the grid centre.
+
+\begin{lstlisting}[language=pseudo, caption={\textsc{dv seed} initial condition (\texttt{buildEcosystem('hyperseed')}). Only ch3 (alpha) receives non-zero values; the rest of the ecosystem bootstraps from the $\beta_{3}$ ring.}]
+for each pixel (x, y) in [0, N)^2:
+  nx = (x / N - 0.5) * 2.2                  // centered, normalized
+  ny = (y / N - 0.5) * 2.2
+  r  = sqrt(nx^2 + ny^2)
+
+  // Three DV rings at their beta-weighted radii
+  ring3 = exp(-((r - 0.85) / 0.08)^2) * 1.000
+  ring2 = exp(-((r - 0.55) / 0.10)^2) * 0.167
+  ring1 = exp(-((r - 0.20) / 0.12)^2) * 0.083
+
+  data[(y*N + x)*4 + 3] = ring3 + ring2 + ring1   // ch3 only
+  // ch0 = ch1 = ch2 = 0.0 (empty ecosystem)
+\end{lstlisting}
+
+From this --- a single glowing ring of 4D origin, no prey, no predator,
+no morphogen --- the ecosystem bootstraps itself. As \textsc{zw} rotation
+proceeds, the outer ring ($\beta_{3}=1$, the dominant shell) appears and
+disappears as it sweeps through the 2D observation plane. Wherever it
+appears, prey nucleates from the \texttt{hyperMix} coupling. Predators do
+not appear spontaneously in this preset --- they require separate seeding
+or painting. But the prey field that emerges is shaped, from its first
+moment of existence, by the geometry of a creature that lives four
+dimensions away.
+
+\begin{callout}[Causal transparency \,\textperiodcentered\, \textsc{claire} alignment argument]
+Every causal pathway from \DV\ (4D) to the ecosystem (2D) is fully visible
+and adjustable in the interface. The \texttt{hyperMix} slider is a causal
+dial. The \textit{4D Projection} view shows exactly what \DV\ is doing at
+every frame. The \textit{Flow Field} view shows the velocity field
+coupling prey and morphogen. There are no hidden variables.
+
+This is the \textsc{claire} principle made literal: Causal, Legible,
+Auditable, Interpretable, Robust, Explainable. A 4D organism influences
+a 2D world --- and the influence is completely observable.
+\end{callout}
+
+\section{Flow Field Advection}
+
+Inspired by Flow-Lenia \citep{plantec2022}, Genesis adds a velocity field
+derived from channel gradients that advects the entire state before each
+convolution. This adds large-scale fluid dynamics on top of the local
+reaction--diffusion.
+
+\begin{lstlisting}[language=pseudo, caption={\textsc{flow\_frag} --- three advection modes. The spiral mode produces galaxy-like large-scale structure.}]
+// Mode 0: Gradient flow
+// Prey flows along morphogen gradient; prey curl generates vorticity
+vel = grad(A2) * 3.0 + curl(grad(A0)) * 1.5
+
+// Mode 1: Curl flow (purely rotational)
+vel = curl(grad(A0)) * 4.0
+
+// Mode 2: Spiral flow
+angle = atan(centered.y, centered.x) + u_time * 0.3
+vel   = radial(centered) * r * 2.0 + grad(A2) * 2.0
+
+// Pack into [0,1] (0.5 = zero velocity), output to flowTex
+outColor = vec4(vel * 0.15 + 0.5, 0.5, 1.0)
+
+// Applied in SIM_FRAG as backward advection:
+advUV = fract(v_uv - vel * texel * u_flowStr)
+prev  = texture(u_state, advUV)
+\end{lstlisting}
+
+The flow field makes all channels \emph{fluid}: prey concentrations drift
+along morphogen gradients, predator populations are carried in the wake
+of prey motion, and the morphogen field itself swirls. In \textit{Spiral}
+mode, the entire simulation develops galaxy-like large-scale structure
+--- rotating arms of prey with predators chasing along the trailing edges.
+
+\section{Behavioral Observations}
+
+\begin{table}[h!]
+\small\sffamily
+\renewcommand{\arraystretch}{1.25}
+\begin{tabularx}{\linewidth}{@{}l >{\raggedright\arraybackslash}X@{}}
+\toprule
+\textsc{Preset} & \textsc{Key observation}\\
+\midrule
+Duel         & Prey solitons orbit then merge under predator pressure. Predator collapses when prey exhausted; reseeding required. Morphogen trails persist $40$–$60$ frames post-death.\\
+Swarm        & Arms race: prey cluster in morphogen-depleted voids to evade predator. Predators converge on highest-density prey patches. Stable coexistence occasionally at $c_{01}\!\sim\!0.3$, $c_{10}\!\sim\!0.4$.\\
+Coexist      & Separated factions develop distinct morphogen territories. At contact boundary: dramatic species interaction --- sometimes competitive exclusion, occasionally stable interface.\\
+Invasion     & Predator wavefront propagates $\sim 2$–$3$ cells / sim-second. Burned region behind front resists recolonization --- morphogen depleted. Prey occasionally outflank via toroidal wrap.\\
+\rowcolor{codebg}\textsc{dv} Seed    & Prey nucleates in annular band at outer \DV\ ring radius ($\sim 85\%$ of grid radius). Band rotates with \textsc{zw} speed. \textsc{xw/yw} rotation breaks symmetry, creates asymmetric prey patches. \DV\ is \textit{invisible} in ecosystem view.\\
+4D View      & \DV\ ring maximally visible at $W\text{-slice}=0$. Vanishes near $W=\pm 0.8$. Three $\beta$-weighted rings ($R/3$, $R/2$, $5R/6$) clearly distinguishable. Outer ring $\sim 12\times$ brighter than inner --- dominant as expected.\\
+Flow: Curl   & Prey generates vorticity; spiral structures self-organize. Predators orbit prey cores. Stable rotating assemblies occasionally form and persist for hundreds of frames.\\
+Flow: Spiral & Galaxy-like large-scale structure. Rotating arms of prey, predators trailing along leading edges. \DV\ ring seeds new prey in the arm that sweeps over its position.\\
+\bottomrule
+\end{tabularx}
+\caption{\small Behavioral observations by preset and mode. All observations
+at default parameters; coupling strengths $c_{01}=0.35$, $c_{10}=0.40$.}
+\end{table}
+
+\section{Open Questions}
+
+\subsection{True 4D simulation}
+A full 4D Lenia grid simulation --- impractical at $N=256$ but possible
+at $N=32$–$64$ --- would let \DV\ dynamically respond to its own projected
+influence on the 2D world. The analytical approximation fixes \DV's shape;
+a true simulation might reveal that the 4D--2D coupling warps \DV's own
+4D body over time: \emph{an organism shaped by its own shadow.}
+
+\subsection{Phase locking}
+If the \DV\ breath period matches the prey--predator Lotka--Volterra
+period, resonance effects might produce dramatically amplified prey
+bursts at the moment of maximum \DV\ visibility. Can \texttt{hyperMix}
+tuning phase-lock these two oscillation systems?
+
+\subsection{Other 4D species}
+Chan's \texttt{animals4D.json} contains multiple named 4D organisms. Do
+any exhibit translational dynamics in 4D that would produce a moving 2D
+nucleation point --- a traveling seed source rather than a stationary
+ring? Could such an organism \emph{walk} across the 2D ecosystem, leaving
+trails of spontaneous prey?
+
+\subsection{2D relatives}
+Does $\boldsymbol{\beta}=(\tfrac{1}{12},\tfrac{1}{6},1)$ produce stable
+\SO\ species in 2D Lenia at modified $\mu$–$\sigma$ values? If so, is
+there a continuous parameter path from those 2D species to \DV\ --- a
+topological deformation across dimensional boundaries?
+
+\subsection{Morphogenetic memory}
+At high \texttt{hyperMix} values, does \DV's rotation generate a
+\emph{persistent} morphogen ring (via prey secretion) that outlasts the
+\DV\ cross-section's visibility? If so, \DV\ leaves a physical record in
+a field that modifies the physics of every organism that passes through
+it --- a kind of 4D memory inscribed in 2D matter.
+
+\subsection{Synchronization across multiple DV instances}
+If two analytical \DV\ generators are seeded with different \textsc{zw}
+phase offsets, do the prey populations they nucleate exhibit interference
+patterns --- \emph{constructive} (prey burst) when both rings overlap,
+\emph{destructive} (prey famine) when they cancel? This would be 4D
+organism interference visible in 2D ecology.
+
+\section{Teármann Research Context}
+
+\subsection{The Layer 4 thesis}
+The Teármann theoretical framework proposes \textit{Layer 4} reasoning:
+the ability to reason \emph{across} causal graph structures rather than
+\emph{within} a fixed one --- counterfactual reasoning that operates at
+the level of the structural causal model, treating the graph structure
+itself as a variable. \citet{pearl2009}'s do-calculus and
+\citet{correa2020}'s ctf-calculus operate within a given graph; Layer 4
+reasons about which graph to use.
+
+\DV\ is a \emph{physical instantiation} of this concept. The organism
+exists in a causal structure (4D Lenia) that is inaccessible to 2D
+observers. Its influence on the 2D ecosystem is fully real but cannot be
+represented within the 2D causal graph --- \DV\ is a variable that
+belongs to a higher-level causal model. Layer 4 reasoning would be
+capable of explicitly representing the 4D structure and intervening on
+the 4D--2D coupling.
+
+\subsection{Shoal-Broadcast and the morphogen channel}
+The Shoal-Broadcast architecture proposes that agents communicate not
+through discrete messages but through perturbations in a shared
+continuous scalar field --- the \emph{shoal field}. The morphogen channel
+(ch2) in Genesis is exactly this: a continuous medium secreted by prey
+and predator alike, modulating the physics of survival for every organism
+that moves through it. \DV\ adds a higher-order broadcast layer: the 4D
+shadow modulates ch0 (prey) which modulates ch2 (morphogen) which
+modulates the physics of ch0 and ch1 --- a three-level broadcast cascade
+originating in 4D.
+
+\subsection{Rukha and the counterfactual engine}
+Rukha (a companion project) is a counterfactual narrative engine grounded
+in Pearl's do-calculus and the Correa--Bareinboim ctf-calculus. The \DV\
+ecosystem generates exactly the kind of causally transparent data Rukha
+is designed to annotate: a sequence of events (prey nucleation, predator
+convergence, morphogen trail formation) with completely observable causal
+provenance. Each frame is a data point for a causal event graph where the
+4D seeding variable (\texttt{ch3}$\to$\texttt{ch0}) is fully observable
+and quantifiable via the \texttt{hyperMix} value.
+
+\vspace{22pt}
+\begin{center}
+{\Large\itshape\color{accent}乙超球 \,\textperiodcentered\, \textit{Dihypersphaerome ventilans}}\\[3pt]
+{\sffamily\footnotesize\color{muted}
+  \SO\ \,\textperiodcentered\, \ventilans\ \,\textperiodcentered\, $R{=}10$ \,\textperiodcentered\,
+  $\boldsymbol{\beta}{=}(\tfrac{1}{12},\tfrac{1}{6},1)$ \,\textperiodcentered\, $\mu{=}0.18$ \,\textperiodcentered\, $\sigma{=}0.033$\\
+  4D hyperspherical oscillator \,\textperiodcentered\, \citealt{chan2020} \,\textperiodcentered\,
+  code 3\textsc{Hy}2v \,\textperiodcentered\, Teármann 2026}
+\end{center}
+
+\appendix
+\section*{\hfil\normalsize\scshape Mathematical Appendix \hfil}
+\addcontentsline{toc}{section}{Mathematical Appendix}
+\renewcommand{\thesubsection}{\Alph{subsection}}
+\setcounter{subsection}{0}
+
+\subsection{Kernel normalization}
+The raw kernel weights must be normalized so that $K$ integrates to unity
+over the full neighborhood (i.e.\ a uniform state $A\equiv 1$ yields
+$U\equiv 1$). For a discrete 2D grid at resolution $\Delta x = 1/R$,
+
+\begin{lstlisting}[language=pseudo, caption={Kernel normalization.}]
+sum = 0
+for dy in [-R, R]:
+  for dx in [-R, R]:
+    r = sqrt(dx^2 + dy^2) / R
+    if 0 < r < 1:
+      ri = floor(r * 3)
+      t  = r * 3 - ri
+      sum += beta[ri] * kcore(t)
+
+K_normalized(r) = K_raw(r) / sum
+
+// For DV params: sum is dominated by the outer ring (beta_3 = 1).
+// Inner rings contribute < 14% of total weight combined.
+\end{lstlisting}
+
+\subsection{Growth-function fixed points}
+The growth function $G(u)=2\exp\!\bigl(-(u-\mu)^{2}/2\sigma^{2}\bigr)-1$
+has three fixed points in $[0,1]$: $G=0$ at $u=\mu\pm
+\sigma\sqrt{2\ln 2}$. For \DV: $u_{\text{eq}} = 0.18 \pm 0.033\cdot
+1.1774 = \{0.147,\,0.213\}$. A cell is in equilibrium (neither growing
+nor dissolving) when its neighborhood potential lies exactly in this
+pair. The organism's stable breathing cycle is a limit cycle that
+oscillates around the equilibrium manifold $\{U(x) = 0.18 \text{ for
+all } x \text{ in organism body}\}$.
+
+\subsection{4D volume and surface scaling}
+In $n$ dimensions, for a shell at radius $r$ with thickness $\mathrm{d}r$:
+\begin{equation}
+\mathrm{d}V_{n} \;=\; C_{n}\, r^{n-1}\,\mathrm{d}r,
+\qquad
+C_{n} \;=\; \frac{2\pi^{n/2}}{\Gamma(n/2)}.
+\end{equation}
+For $n=4$: $C_{4}=2\pi^{2}$. The surface area of \DV's outer $S^{3}$
+shell is $A_{3}=2\pi^{2}r^{3}$ --- scaling as $r^{3}$ --- while the 4D
+ball volume scales as $r^{4}$. At $r=5R/6$ for \DV\ with $R=10$, the
+outer shell radius is $\sim 8.33$ grid cells and its ``4D surface area''
+(in grid-cell units) is $\sim 3625$ cells, versus the total 4D ball
+volume of $\sim 3801$ cells. The organism is almost entirely surface ---
+the interior volume is negligible relative to the 4D surface it presents
+to the kernel.
+
+% ============================================================
+%  REFERENCES
+% ============================================================
+\begin{thebibliography}{99}
+\small
+
+\bibitem[Chan(2019){Chan}]{chan2019}
+Chan, B.\,W.-C. (2019).
+\newblock Lenia: Biology of Artificial Life.
+\newblock \textit{Complex Systems} 28(3), 251--286.
+
+\bibitem[Chan(2020){Chan}]{chan2020}
+Chan, B.\,W.-C. (2020).
+\newblock Lenia and Expanded Universe.
+\newblock In \textit{Proceedings of the 2020 Conference on Artificial Life}
+  (ALIFE 2020), 221--229. MIT Press.
+
+\bibitem[Chan(2020a){Chan}]{chan-animals}
+Chan, B.\,W.-C.
+\newblock \texttt{animals4D.json}. GitHub: \url{github.com/Chakazul/Lenia}.
+\newblock Species code 3\textsc{Hy}2v, Chinese designation 乙超球.
+
+\bibitem[Plantec et al.(2022){Plantec et al.}]{plantec2022}
+Plantec, E.\ et al.\ (2022).
+\newblock Flow-Lenia: Towards open-ended evolution in cellular automata
+  through mass conservation and parameter localization.
+\newblock \texttt{arXiv:2212.07906}. ALIFE 2023 Best Paper Award.
+
+\bibitem[Michel et al.(2025){Michel et al.}]{michel2025}
+Michel, G.\ et al.\ (2025).
+\newblock Exploring Flow-Lenia Universes with a Curiosity-driven AI Scientist.
+\newblock \texttt{arXiv:2505.15998}.
+
+\bibitem[Hamon et al.(2024){Hamon et al.}]{hamon2024}
+Hamon, G.\ et al.\ (2024).
+\newblock Discovering self-organized patterns in Lenia with
+  curiosity-driven exploration. arXiv preprint.
+
+\bibitem[Faldor et al.(2024){Faldor et al.}]{faldor2024}
+Faldor, M.\ et al.\ (2024).
+\newblock Toward Artificial Open-Ended Evolution within Lenia using
+  Quality-Diversity. \texttt{arXiv:2406.04235}.
+
+\bibitem[Pearl(2009){Pearl}]{pearl2009}
+Pearl, J.\ (2009).
+\newblock \textit{Causality: Models, Reasoning, and Inference}
+  (2nd ed.). Cambridge University Press.
+
+\bibitem[Correa \& Bareinboim(2020){Correa and Bareinboim}]{correa2020}
+Correa, J.\,D.\ \& Bareinboim, E.\ (2020).
+\newblock A calculus for stochastic interventions: Causal effect
+  identification and surrogate experiments.
+\newblock In \textit{Proceedings of AAAI 2020}.
+
+\bibitem[Koons \& Claude(2026){Koons and Claude}]{koons2026}
+Sebastian, S.\ \& Claude (2026).
+\newblock \textit{Orbium unicaudatus ignis var.\ phantasma}: A Lenia
+  Species Engineered to Inhabit the Edge of Chaos. Replete AI internal
+  report.
+
+\bibitem[Rafler(2011){Rafler}]{rafler2011}
+Rafler, S.\ (2011).
+\newblock Generalization of Conway's Game of Life to a continuous
+  domain: SmoothLife. \texttt{arXiv:1111.1567}.
+
+\bibitem[Schmickl et al.(2016){Schmickl et al.}]{schmickl2016}
+Schmickl, T.\ et al.\ (2016).
+\newblock How a life-like system emerges from a simplistic particle
+  motion law. \textit{Scientific Reports} 6.
+
+\bibitem[Quílez(2013){Quílez}]{quilez2013}
+Quílez, I.\ (2013).
+\newblock Palettes. \url{iquilezles.org/articles/palettes/}.
+
+\end{thebibliography}
+
+\vspace{18pt}
+\begin{center}
+\sffamily\footnotesize\color{muted}
+Genesis Artificial Life Laboratory \,\textperiodcentered\, Replete AI \,\textperiodcentered\, Teármann Research Ecosystem \,\textperiodcentered\, 2026\\
+\href{https://github.com/Kquant03/genesis-phase-transition}{\texttt{github.com/Kquant03/genesis-phase-transition}} \,\textperiodcentered\, \href{https://repleteai.com}{\texttt{repleteai.com}}
+\end{center}
+
+\end{document}

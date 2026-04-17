@@ -35,10 +35,10 @@ const L_HARD_CAP = 50.0;
 const R_HARD_CAP = 2.0;
 const POP_CAP = 2000;          // safety cap for fission blooms
 
-const ACCENT = "#fbbf24";
-const GRABBY_COLOR = "236, 72, 153";
-const GHOST_COLOR = "78, 205, 196";
-const BALANCED_COLOR = "251, 191, 36";
+const ACCENT = "#8AAFC8";
+const GRABBY_COLOR = "232, 63, 63";
+const GHOST_COLOR = "127, 175, 179";
+const BALANCED_COLOR = "145, 230, 147";
 
 // ─── Seeded RNG (mulberry32) ────────────────────────────────────────────────
 function mulberry32(seed) {
@@ -222,14 +222,14 @@ function parseStateHash() {
 
 // ─── Helpers for hue continuously by (e - c) ────────────────────────────────
 function agentColor(a) {
-  // Continuous hue by (e - c): -1 → pure ghost cyan; 0 → balanced gold; +1 → pure grabby pink
+  // Continuous hue by (e - c): -1 → pure ghost teal; 0 → balanced green; +1 → pure grabby red
   const t = (a.e - a.c + 1) / 2; // [0, 1]
   if (t < 0.5) {
-    // cyan → gold over [0, 0.5]
-    return mix([78, 205, 196], [251, 191, 36], t * 2);
+    // teal → green over [0, 0.5]
+    return mix([127, 175, 179], [145, 230, 147], t * 2);
   } else {
-    // gold → pink over [0.5, 1]
-    return mix([251, 191, 36], [236, 72, 153], (t - 0.5) * 2);
+    // green → red over [0.5, 1]
+    return mix([145, 230, 147], [232, 63, 63], (t - 0.5) * 2);
   }
 }
 function mix(a, b, t) {
@@ -458,14 +458,14 @@ function renderRunner(ctx, W, H, runner, { selectedAgentId, showTrails }) {
 
   // Pop-cap warning
   if (runner.capped) {
-    ctx.fillStyle = "rgba(236, 72, 153, 0.15)";
+    ctx.fillStyle = "rgba(232, 63, 63, 0.15)";
     ctx.fillRect(W / 2 - 130, H / 2 - 18, 260, 36);
-    ctx.fillStyle = "#ec4899";
+    ctx.fillStyle = "#e83f3f";
     ctx.font = "bold 11px 'JetBrains Mono', monospace";
     ctx.textAlign = "center";
     ctx.fillText(`⚠ POP CAP ${POP_CAP} REACHED`, W / 2, H / 2 + 4);
     ctx.font = "9px 'JetBrains Mono', monospace";
-    ctx.fillStyle = "#ec4899bb";
+    ctx.fillStyle = "#e83f3fbb";
     ctx.fillText("fission paused — RESET or raise L_fiss", W / 2, H / 2 + 16);
     ctx.textAlign = "left";
   }
@@ -1096,7 +1096,7 @@ export default function FilterSimulation() {
               {compareMode && (
                 <div>
                   <div style={{
-                    fontSize: 9, color: "#4ecdc4", marginBottom: 6,
+                    fontSize: 9, color: "#7FAFB3", marginBottom: 6,
                     fontFamily: "'JetBrains Mono', monospace",
                     letterSpacing: "0.12em",
                   }}>
@@ -1182,7 +1182,7 @@ export default function FilterSimulation() {
                     label="status"
                     value={selectedAgentData.alive ? "alive"
                       : `died (${selectedAgentData.deathMode}) t=${selectedAgentData.deathAge}`}
-                    color={selectedAgentData.alive ? "#4ecdc4" : "#ec4899"}
+                    color={selectedAgentData.alive ? "#7FAFB3" : "#e83f3f"}
                   />
                 </div>
               </div>
@@ -1258,9 +1258,9 @@ export default function FilterSimulation() {
                         textAlign: "center", lineHeight: 1.5,
                       }}>
                         {entry.label}<br />
-                        <span style={{ color: "#4ecdc4" }}>ghost:</span>&nbsp;
+                        <span style={{ color: "#7FAFB3" }}>ghost:</span>&nbsp;
                         {entry.ghostMean.toFixed(0)}&nbsp;·&nbsp;
-                        <span style={{ color: "#ec4899" }}>grabby:</span>&nbsp;
+                        <span style={{ color: "#e83f3f" }}>grabby:</span>&nbsp;
                         {entry.grabbyMean.toFixed(0)}<br />
                         <span style={{ color: ACCENT }}>{entry.ratio.toFixed(1)}× separation</span>
                       </div>
@@ -1495,10 +1495,10 @@ export default function FilterSimulation() {
                         onClick={() => setCompareFissionMode(mode)}
                         style={{
                           flex: 1,
-                          background: compareFissionMode === mode ? "#4ecdc422" : "#1a2236",
-                          border: `1px solid ${compareFissionMode === mode ? "#4ecdc466" : "#2a3456"}`,
+                          background: compareFissionMode === mode ? "#7FAFB322" : "#1a2236",
+                          border: `1px solid ${compareFissionMode === mode ? "#7FAFB366" : "#2a3456"}`,
                           borderRadius: 4,
-                          color: compareFissionMode === mode ? "#4ecdc4" : "#8a9bba",
+                          color: compareFissionMode === mode ? "#7FAFB3" : "#8a9bba",
                           padding: "4px 6px", fontSize: 9,
                           fontFamily: "'JetBrains Mono', monospace",
                           letterSpacing: "0.06em", cursor: "pointer",
@@ -1534,10 +1534,10 @@ export default function FilterSimulation() {
               <StatRow label="alive" value={`${stats.alive}`} />
               <StatRow label="lineages alive" value={stats.lineages.toString()} color={ACCENT} />
               <StatRow label="fissions (cum.)" value={stats.totalFissions.toString()} />
-              <StatRow label="dead (burnout)" value={stats.burnout.toString()} color="#ec4899" />
+              <StatRow label="dead (burnout)" value={stats.burnout.toString()} color="#e83f3f" />
               <StatRow label="dead (shock)" value={stats.shock.toString()} color="#a78bfa" />
-              <StatRow label="ghost-region alive" value={stats.ghostAlive.toString()} color="#4ecdc4" />
-              <StatRow label="grabby-region alive" value={stats.grabbyAlive.toString()} color="#ec4899" />
+              <StatRow label="ghost-region alive" value={stats.ghostAlive.toString()} color="#7FAFB3" />
+              <StatRow label="grabby-region alive" value={stats.grabbyAlive.toString()} color="#e83f3f" />
               {stats.meanDeathAge > 0 && (
                 <StatRow label="mean death age" value={`${stats.meanDeathAge.toFixed(0)} Myr`} />
               )}
@@ -1549,7 +1549,7 @@ export default function FilterSimulation() {
                 borderTop: "1px solid #1a2236",
               }}>
                 <div style={{
-                  fontSize: 9, letterSpacing: "0.1em", color: "#4ecdc4",
+                  fontSize: 9, letterSpacing: "0.1em", color: "#7FAFB3",
                   fontFamily: "'JetBrains Mono', monospace", marginBottom: 10,
                 }}>
                   LIVE STATISTICS (RUN B)
@@ -1558,8 +1558,8 @@ export default function FilterSimulation() {
                 <StatRow label="alive" value={compareStats.alive.toString()} />
                 <StatRow label="lineages alive" value={compareStats.lineages.toString()} color={ACCENT} />
                 <StatRow label="fissions (cum.)" value={compareStats.totalFissions.toString()} />
-                <StatRow label="ghost-region alive" value={compareStats.ghostAlive.toString()} color="#4ecdc4" />
-                <StatRow label="grabby-region alive" value={compareStats.grabbyAlive.toString()} color="#ec4899" />
+                <StatRow label="ghost-region alive" value={compareStats.ghostAlive.toString()} color="#7FAFB3" />
+                <StatRow label="grabby-region alive" value={compareStats.grabbyAlive.toString()} color="#e83f3f" />
               </div>
             )}
           </div>

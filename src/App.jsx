@@ -15,7 +15,7 @@ const SIMS = [
   { id: "rd",      label: "Gray-Scott RD",                icon: "◎", color: "#a78bfa", desc: "Reaction-diffusion morphogenesis. Mitosis, coral, spirals, and soliton patterns from two PDEs." },
   { id: "plife",   label: "Particle Life",                icon: "◆", color: "#ec4899", desc: "Asymmetric force matrices between particle types. Emergent predation, symbiosis, membranes." },
   { id: "pps",     label: "Primordial Particles",         icon: "◇", color: "#34d399", desc: "One equation, two parameters. Cells that grow, divide, form spores, and self-repair." },
-  { id: "filter",  label: "The Filter",                   icon: "◬", color: "#fbbf24", desc: "Ghost layer as selection geometry. Civilizations as agents in (expansion, coupling) space. Watch the filter select out grabby lineages in real time; run the phase-diagram sweep live." },
+  { id: "filter",  label: "The Filter",                   icon: "◬", color: "#8AAFC8", desc: "Ghost layer as selection geometry. Civilizations as agents in (expansion, coupling) space. Watch the filter select out grabby lineages in real time; run the phase-diagram sweep live." },
 ];
 
 function Loading() {

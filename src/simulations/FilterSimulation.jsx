@@ -222,14 +222,21 @@ function parseStateHash() {
 
 // ─── Helpers for hue continuously by (e - c) ────────────────────────────────
 function agentColor(a) {
-  // Continuous hue by (e - c): -1 → pure ghost teal; 0 → balanced green; +1 → pure grabby red
+  // Continuous hue by (e - c): -1 → ghost teal; 0 → balanced green; +1 → grabby red
+  // Ghost→balanced routes through luminous aquamarine so the transition blooms
   const t = (a.e - a.c + 1) / 2; // [0, 1]
-  if (t < 0.5) {
-    // teal → green over [0, 0.5]
-    return mix([127, 175, 179], [145, 230, 147], t * 2);
+  if (t < 0.25) {
+    // ghost teal → bright aquamarine
+    return mix([127, 175, 179], [92, 218, 200], t * 4);
+  } else if (t < 0.5) {
+    // bright aquamarine → balanced green
+    return mix([92, 218, 200], [145, 230, 147], (t - 0.25) * 4);
+  } else if (t < 0.75) {
+    // balanced green → warm amber warning
+    return mix([145, 230, 147], [210, 160, 90], (t - 0.5) * 4);
   } else {
-    // green → red over [0.5, 1]
-    return mix([145, 230, 147], [232, 63, 63], (t - 0.5) * 2);
+    // warm amber → grabby red
+    return mix([210, 160, 90], [232, 63, 63], (t - 0.75) * 4);
   }
 }
 function mix(a, b, t) {

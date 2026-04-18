@@ -6,13 +6,25 @@
 %
 %  Stanley Sebastian, in sustained dialogue with Claude (Anthropic)
 %
-%  Version 12.0 · April 2026
-%  Prepared for submission to Minds and Machines
-%  v12 revision: Option-B tightening. Simulation reframed as illustrative
-%  of the §6 thermodynamics rather than independent demonstration;
-%  p-values removed in favour of effect-size framing; Wong--Bartlett
-%  crosswalk softened to a suggestive analogy; biosignature section
-%  condensed to a research-programme note. Citation audit applied.
+%  Version 13.0 · April 2026
+%  Prepared for submission to AI & Society (target venue) or
+%  Philosophy & Technology (contingency; see disclosure)
+%  v13 revisions:
+%  - Abel et al. (2021) re-characterised honestly; the memorylessness
+%    claim attributed to author's own reconstruction, not their theorem
+%  - Turner self-retraction quotation given surrounding context so it
+%    reads as a specific technical complaint (optimal-policy vs. RL
+%    training) rather than rhetorical cherry-pick
+%  - Jackson & Criado-Perez (2024) re-cited correctly and engaged as
+%    the published critique of Wong--Bartlett
+%  - Section 3 ("What Actual Minds Do") tightened toward
+%    mechanism-forward voice in response to methodological critique
+%    that the register drifted toward literature-review summary
+%  - "Contribution is the joint" framing softened in several places
+%    to claim-by-claim logical articulation
+%  - AI-assistance disclosure updated for Springer Nature compliance
+%    (model version, dates, verification attestation, full-responsibility
+%    statement); acknowledgements four-move/five-move inconsistency fixed
 % ══════════════════════════════════════════════════════════════════
 
 \usepackage[utf8]{inputenc}
@@ -44,7 +56,7 @@
 \pagestyle{fancy}
 \fancyhf{}
 \fancyhead[L]{\small\textcolor{headercolor}{\textsc{Against Grabby Expansion}}}
-\fancyhead[R]{\small\textcolor{headercolor}{\textsc{Sebastian \textnormal{\textperiodcentered} v12 \textnormal{\textperiodcentered} 2026}}}
+\fancyhead[R]{\small\textcolor{headercolor}{\textsc{Sebastian \textnormal{\textperiodcentered} v13 \textnormal{\textperiodcentered} 2026}}}
 \fancyfoot[C]{\small\thepage}
 \renewcommand{\headrulewidth}{0.4pt}
 
@@ -69,7 +81,7 @@
 {\small $^1$\,Limen Research, Toledo, Ohio \quad
 $^2$\,Replete AI \textnormal{\textperiodcentered} Te\'armann Research Ecosystem}\\[6pt]
 {\footnotesize\itshape\textcolor{epigraph}{Developed in sustained dialogue with Claude, a large language model\\developed by Anthropic. See disclosure before references.}}\\[10pt]
-{\small Version 12.0 \textnormal{\textperiodcentered} April 2026}\\[14pt]
+{\small Version 13.0 \textnormal{\textperiodcentered} April 2026}\\[14pt]
 \textcolor{rulecolor}{\rule{0.5\textwidth}{0.4pt}}\\[10pt]
 \end{center}
 
@@ -264,12 +276,21 @@ observational program. Humanity's own Kardashev curve, observed in
 1820--2024 energy data, shows the bending the filter framework
 predicts.
 
-The contribution is the joint. \citet{man2019} do not diagnose the
-cultural formation; \citet{gebru2024} do not offer architectural
-primitives; \citet{cirkovic2018} does not engage the alignment
-literature; \citet{muller2022} do not thematize the cosmological
-projection; no prior paper makes the filter move as the bridge
-between them. This one does.
+The five moves combine into a single integrated argument, and each
+supplies what the others cannot. The genealogy explains why the
+expansion-maximisation picture has felt so natural to modern alignment
+research without being empirically true of minds. The formal deflation
+removes the strongest reason to think the picture is forced anyway.
+The filter argument explains why, if the picture were true, the sky
+would already be transformed and is not. The positive-design move
+supplies what the picture would have to be replaced with for
+artificial minds to be built differently. The symptom check notes
+that the cosmological observation is consistent with the rest. No
+prior paper combines these; existing work does one or two of the
+moves and stops. \citet{man2019} does not diagnose the cultural
+formation; \citet{gebru2024} do not offer architectural primitives;
+\citet{cirkovic2018} does not engage the alignment literature;
+\citet{muller2022} does not thematise the cosmological projection.
 
 \subsection{Claims ordered by strength}
 
@@ -384,14 +405,14 @@ proposer rejected the literalization.
 \subsection{The optimizer (2008--2014)}
 
 \citet{omohundro2008} proposed six ``basic AI drives'' including resource
-acquisition and self-preservation. \citet{bostrom2012}, in this journal,
-formalized the orthogonality thesis---that any level of intelligence is
-compatible with any final goal---and the instrumental convergence thesis:
-any sufficiently intelligent agent pursuing almost any goal will
-convergently pursue self-preservation, goal-content integrity, cognitive
-enhancement, and resource acquisition. \citet{bostrom2014} extended this
-into the superintelligence framework. The paperclip maximizer and the
-grabby civilization are the same organism at different scales.
+acquisition and self-preservation. \citet{bostrom2012} formalized the
+orthogonality thesis---that any level of intelligence is compatible with
+any final goal---and the instrumental convergence thesis: any sufficiently
+intelligent agent pursuing almost any goal will convergently pursue
+self-preservation, goal-content integrity, cognitive enhancement, and
+resource acquisition. \citet{bostrom2014} extended this into the
+superintelligence framework. The paperclip maximizer and the grabby
+civilization are the same organism at different scales.
 
 The intellectual context is Silicon Valley optimization culture of the
 2010s. \citet{crawford2021} reframes AI as a material extractive
@@ -399,12 +420,12 @@ industrial formation. \citet{gebru2024} diagnose the ``TESCREAL
 bundle''---transhumanism, extropianism, singularitarianism, cosmism,
 rationalism, effective altruism, longtermism---as an ideological package
 that universalizes a particular Western-corporate epistemology. Recent
-\emph{Minds and Machines} work has begun extending this critique:
-\citet{floridi2026} read contemporary ``agentic AI optimisation'' as the
-operational face of the same imaginary, and \citet{campione2026} analyse
-the fair-washing dynamics through which optimization frameworks conceal
-their own values. The aliens we imagine are never actually aliens. They
-are ourselves, with better technology and fewer constraints.
+work has begun extending this critique: \citet{floridi2026} read
+contemporary ``agentic AI optimisation'' as the operational face of the
+same imaginary, and \citet{campione2026} analyse the fair-washing
+dynamics through which optimization frameworks conceal their own values.
+The aliens we imagine are never actually aliens. They are ourselves,
+with better technology and fewer constraints.
 
 \subsection{The pattern, narrowed}
 
@@ -468,119 +489,118 @@ evidence is robust and where it is suggestive.
 
 \subsection{Basal cognition and substrate coupling (robust)}
 
-The most important recent development in biology for the argument of
-this paper is the basal-cognition program of \citet{lyon2021}, which
-reframes cognition as a domain-general property of living systems rather
-than a property of nervous systems specifically. On this view, cognition
-is what biological agents do to maintain themselves: sense, discriminate,
-decide, act, remember, learn---all in the service of staying alive as
-the specific configuration they are. The architecture that realizes this
-at the cellular and tissue level is bioelectric signalling
-\citep{levin2023}, and the scaling principle is what \citet{mcmillen2024}
-call \emph{collective intelligence}: competence at one level of
-organization arises from coordinated homeostatic agency at levels below.
-\citet{seifert2024} make the bridge to reinforcement learning explicit,
-arguing that basal agency supplies the missing ingredient---intrinsic
-motivation grounded in self-maintenance---that makes the RL framing of
-cognition coherent rather than question-begging.
+Cognition is not a property of nervous systems. It is a property of
+living systems: what biological agents do to stay alive as the
+specific configurations they are. The cellular and tissue-level
+architecture that realises it is bioelectric signalling, and the
+scaling principle is what has come to be called \emph{collective
+intelligence}---competence at one level of organisation arising from
+coordinated homeostatic agency at levels below
+\citep{lyon2021,levin2023,mcmillen2024}. On this view the reinforcement-learning
+framing of cognition is not question-begging but derivative: the
+intrinsic motivation that makes RL coherent has a grounding in
+self-maintenance \citep{seifert2024}.
 
-The empirical exemplar is \textit{Physarum polycephalum}, a single-celled
-slime mold that solves shortest-path problems, approximates efficient
-transport networks, and learns from habituation---without neurons, a
-central controller, or anything resembling a utility function
-\citep{tero2010,reid2023}. Physarum converges on its solutions by
-\emph{pruning}: it first explores available space, then withdraws
-cytoplasm from unproductive channels until only the efficient network
-remains. The organism does not expand. It deepens a gradient.
+The empirical exemplar is \textit{Physarum polycephalum}. The
+slime mould solves shortest-path problems, approximates efficient
+transport networks, and learns from habituation, with no neurons, no
+central controller, and nothing resembling a utility function
+\citep{tero2010,reid2023}. The mechanism is \emph{pruning}: the
+organism first explores available space, then withdraws cytoplasm
+from unproductive channels until the efficient network remains. The
+solution is not reached by enlarging the explorer. It is reached by
+deepening the gradient the explorer already occupies.
 
-\citet{godfrey2016} documents cephalopod nervous systems organized
-around intimate environmental coupling rather than centralized control:
-two-thirds of octopus neurons are distributed through the arms, each
-arm runs substantial local computation, and the overall architecture
-looks less like a maximizer with a central planner and more like a
-federation of homeostatic semi-autonomous agents. \citet{watson2023}
-generalize: evolution and development themselves instantiate collective
-intelligence, with the same substrate-coupling logic operating across
-scales from gene-regulatory networks to multicellular morphogenesis.
+Cephalopod nervous systems exhibit the same architectural logic.
+Roughly two-thirds of octopus neurons lie in the arms; each arm
+performs substantial local computation and retains behavioural
+autonomy. The overall architecture resembles a federation of
+homeostatic semi-autonomous agents more than a central planner with
+peripheral actuators \citep{godfrey2016}. Evolution and development
+themselves instantiate the same collective-intelligence pattern,
+with substrate-coupling logic operating across scales from
+gene-regulatory networks to multicellular morphogenesis
+\citep{watson2023}.
 
-I note the retrenchment of mycorrhizal-network cognition claims.
-\citet{karst2023} demonstrated that field evidence for the ``wood-wide
-web'' is significantly weaker than popular accounts suggested: only a
-few forest types have genotype-mapped confirmed hyphal linkages, and
-effects on seedling performance are roughly evenly distributed across
-positive, neutral, and negative outcomes. \citet{robinson2024} argue
-plants lack the neural architecture for strong intelligence or sentience
-claims; \citet{simard2025} has defended the original findings while
-softening the ``mother tree'' metaphor. The responsible reading is that
-bidirectional carbon transfer via common mycorrhizal networks is
-empirically supported but network-level cognition is not, and I do not
-rely on the stronger claim.
+Here I record a retrenchment. Early claims for mycorrhizal-network
+cognition---the ``wood-wide web''---do not survive scrutiny. Field
+evidence for network-level effects is weaker than popular accounts
+suggested; only a few forest types have genotype-mapped confirmed
+hyphal linkages, and effects on seedling performance are roughly
+evenly distributed across positive, neutral, and negative outcomes
+\citep{karst2023}. Plants lack the neural architecture for strong
+intelligence or sentience claims \citep{robinson2024}, though
+bidirectional carbon transfer via common mycorrhizal networks
+is empirically supported and the ``mother tree'' metaphor survives
+in softened form \citep{simard2025}. The responsible reading is that
+the stronger network-cognition claim is not supported; I do not rely
+on it.
 
-The argument from basal cognition is therefore an \emph{existence proof}:
-non-expansionist intelligence is biologically realized at multiple scales
-and substrates. Nothing in the biological record supports the assumption
-that minds, at scale, converge on maximization.
+What remains is an existence proof. Non-expansionist intelligence is
+biologically realised at multiple scales and substrates. The
+biological record does not support the assumption that minds, at
+scale, converge on maximisation.
 
 \subsection{Predictive processing and integrative depth (robust)}
 
-The second line comes from the predictive-processing research program in
-cognitive neuroscience. \citet{clark2013} and \citet{friston2010} argue
-that the cortex operates by generating predictions and updating them
-against sensory evidence, with learning and attention understood as the
-precision-weighting of prediction errors. \citet{clark2016} and
-\citet{hohwy2013} develop the implications: the computational signature
-of intelligence is not expansion of representational capacity but
-sharpening of precision-weighting---the same cortical hierarchy becomes
-more discriminating without becoming larger.
+The cortex operates by generating predictions and updating them
+against sensory evidence; learning and attention correspond to the
+precision-weighting of the resulting prediction errors
+\citep{clark2013,friston2010,clark2016,hohwy2013}. The computational
+signature of more capable cognition on this account is not expansion
+of representational capacity but sharpening of precision-weighting---the
+same cortical hierarchy becomes more discriminating without becoming
+larger.
 
-\citet{luppi2024} supply the most important recent result. Using
-integrated-information decomposition, they show that the default mode
-network---long portrayed as a mind-wandering circuit to be suppressed
-in favor of task-focused attention---functions as an \emph{integrative
-gateway} for synergistic information. Loss of consciousness in anaesthesia
-and disorders of consciousness corresponds to disconnection of this
-integrative gateway, not to reduction in activity as such. The
-implication for the present argument is direct: the neural signature
-of more capable conscious cognition is \emph{deeper integration of a
-bounded substrate}, not expansion of that substrate.
+The load-bearing recent result is \citet{luppi2024}. Using integrated-information
+decomposition to separate synergistic from redundant and unique
+contributions to integrated information, the analysis shows that the
+default mode network---long portrayed as a mind-wandering circuit to
+be suppressed in favour of task-focused attention---functions as an
+\emph{integrative gateway} for synergistic information. Loss of
+consciousness under anaesthesia and in disorders of consciousness
+tracks disconnection of this integrative gateway, not reduction in
+activity as such. The neural signature of more capable conscious
+cognition is therefore deeper integration of a bounded substrate,
+not expansion of that substrate.
 
-I note, for completeness, that earlier framings of this line appealed
-to default-mode network deactivation in meditation
-\citep{brewer2011,garrison2015}. The post-2020 literature
-\citep{vandam2018,rahrig2022,ganesan2022} has significantly complicated
-that picture: effect sizes are heterogeneous, roughly 60\% of studies
-replicate DMN reduction, and \citet{rahrig2022} in fact find increased
-cross-network connectivity rather than simple reduction. I do not rely
-on the meditation literature for mechanism. The Luppi integrative-gateway
-result supplies a stronger anchor: intelligence deepens by integrating
-more of its existing substrate, not by recruiting more substrate.
+Earlier framings of this line appealed to default-mode network
+deactivation in meditation \citep{brewer2011,garrison2015}. The
+post-2020 literature has complicated that picture: effect sizes are
+heterogeneous, roughly 60\% of studies replicate DMN reduction, and
+the most recent meta-analysis finds increased cross-network
+connectivity rather than simple reduction
+\citep{vandam2018,rahrig2022,ganesan2022}. I do not rely on the
+meditation literature for mechanism. The integrative-gateway result
+supplies a stronger anchor: intelligence deepens by integrating more
+of its existing substrate, not by recruiting more substrate.
 
 \subsection{Cooperative game theory (robust, conditional)}
 
-\citet{axelrod1984} demonstrated that reciprocal strategies dominate
-pure defection in iterated prisoner's dilemma tournaments.
-\citet{nowak1993} showed Win-Stay-Lose-Shift outperforms tit-for-tat in
-noisy environments. \citet{nowak2006} synthesized five rules for the
-evolution of cooperation, each specifying conditions---kin selection,
-direct and indirect reciprocity, network reciprocity, group selection,
-voluntary participation---under which cooperation dominates.
+Reciprocal strategies dominate pure defection in iterated
+prisoner's-dilemma tournaments \citep{axelrod1984}; Win-Stay-Lose-Shift
+outperforms tit-for-tat in noisy environments \citep{nowak1993}; and
+cooperation dominates under five specifiable conditions: kin
+selection, direct and indirect reciprocity, network reciprocity, group
+selection, and voluntary participation \citep{nowak2006}.
 
-I state the honest qualification openly. \citet{press2012} proved that
-zero-determinant ``extortion'' strategies dominate in dyadic play.
-\citet{hauert2002} showed large-$N$ public goods games collapse to
-tragedy of the commons absent voluntary participation. Grabby strategies
-dominate in one-shot encounters, large anonymous markets, asymmetric
-power relations, and unsanctioned commons. These describe much of modern
+The honest qualification must be stated openly. Zero-determinant
+``extortion'' strategies dominate in dyadic play \citep{press2012}, and
+large-$N$ public-goods games collapse to tragedy of the commons absent
+voluntary participation \citep{hauert2002}. Grabby strategies dominate
+in one-shot encounters, large anonymous markets, asymmetric power
+relations, and unsanctioned commons. These describe much of modern
 global capitalism---precisely what makes the critique of this paper
 urgent, and precisely what prevents ``cooperation wins'' from being a
 universal conclusion.
 
-But the scope of the extortion result is tighter than its popular
+The scope of the extortion result is tighter than its popular
 citation suggests, and I develop that point fully in
-\S\ref{sec:alignment}. The game-theoretic evidence supports a conditional
-claim: cooperation dominates \emph{when specific structural conditions
-are met}. The homeostatic-design argument proposes shaping those
-conditions by design rather than assuming they hold.
+\S\ref{sec:alignment}. The game-theoretic evidence supports a
+conditional claim: cooperation dominates \emph{when specific
+structural conditions are met}. The homeostatic-design argument
+proposes shaping those conditions by design rather than assuming they
+hold.
 
 \subsection{Economic anthropology (contested but defensible)}
 
@@ -667,11 +687,19 @@ sets into larger ones). The corollary on shutdown-avoidance requires
 near-unity discount factors. This is a real theorem. Its scope
 conditions are explicit and narrow.
 
-Turner himself has publicly cautioned against overinterpretation:
-``Sometimes I fantasize about retracting [the paper] so that it stops
-potentially misleading people into thinking optimal policies are
-practically relevant for forecasting power-seeking behavior from RL
-training.'' The follow-up \citep{turner2022} extends to retargetable
+Turner himself has publicly cautioned against overinterpretation.
+The complaint is specific and technical: the optimal-policy theorems
+speak to the behaviour of policies that achieve optimal expected
+return in finite MDPs under restrictive reward distributions, and the
+inference from there to the behaviour of neural networks trained by
+policy gradient is not discharged by the theorems themselves. In
+Turner's own words: ``Sometimes I fantasize about retracting [the
+paper] so that it stops potentially misleading people into thinking
+optimal policies are practically relevant for forecasting
+power-seeking behavior from RL training.'' The concern is not that
+AI risk is overblown; it is that this particular family of theorems
+cannot carry the argumentative weight placed on them. The follow-up
+\citep{turner2022} extends the formal results to retargetable
 decision-makers but the applicability to trained deep-learning agents
 remains conjectural. \citet{thorstad2024} shows the inference from
 ``optimal policies avoid 1-cycles in toy MDPs'' to ``catastrophic goal
@@ -713,10 +741,14 @@ rationalizable by a utility function over action-observation histories.
 VNM-coherence over such histories predicts nothing about what behavior
 to expect. Instrumental convergence theorems hold only for rewards over
 \emph{states} under specific symmetries. Once we admit trajectory
-preferences, convergence disappears. \citet{abel2021} show that
-Markov reward maximization is strictly stronger than VNM coherence,
-requiring an additional memorylessness axiom without independent
-motivation.
+preferences, convergence disappears. \citet{abel2021} supply the
+limitative result that Markov reward cannot in general express tasks
+specified as partial orderings over policies or trajectories, which
+means Markov-reward maximization is a strictly narrower formalism than
+VNM coherence over trajectories; the inference from Markov reward to
+any-coherent-agent therefore requires an additional memorylessness
+assumption, which does not appear to have independent motivation in
+the convergence literature.
 
 \emph{Empirical training convergence is a separate, empirical question.}
 \citet{turner2022reward} argues policy-gradient methods yield
@@ -1216,9 +1248,26 @@ coupling that makes it real \citep{tronto1993,fraser2016}.
 
 \citet{wong2022} formalized a version of this argument for civilizations:
 superlinear scaling forces either collapse (``asymptotic burnout'') or
-transition to homeostatic regulation (``homeostatic awakening''). A
-useful question is whether the same bifurcation structure applies to
-the particular class of systems---large-scale deep-learning
+transition to homeostatic regulation (``homeostatic awakening'').
+\citet{jackson2024} have published the obvious critique: the
+Bettencourt-West scaling laws on which Wong \& Bartlett build are
+established for cities, and the civilizational extrapolation is not
+forced. Cross-level inference of this kind is a known hazard, and
+Jackson \& Criado-Perez propose at least three civilization-level
+processes (diversity, government expertise, accumulated research)
+that could in principle flatten the scaling exponent and push any
+given civilization off the burnout trajectory. I accept the critique
+as valid within its frame and want to be clear that my use of the
+Wong--Bartlett argument here does not depend on the city-to-civilization
+extrapolation surviving it: the thermodynamic analysis of
+\S\ref{sec:thermo} does not borrow the urban-scaling coefficients and
+does not assume the civilizational analogue of Bettencourt--West
+$\beta$. What Wong \& Bartlett supply to this paper is the bifurcation
+schematic---costs that scale superlinearly with size, benefits that
+scale sublinearly, yielding collapse-or-regulate as the two attractors.
+That schematic is substrate-general. The useful question for the
+alignment argument is whether the same bifurcation structure applies
+to the particular class of systems---large-scale deep-learning
 architectures---that motivate current alignment work.
 
 I explore this by analogy rather than by identification, and I want to
@@ -1282,12 +1331,14 @@ additional line of motivation, not as an independent proof.
 \section{Alignment Implications}
 \label{sec:alignment}
 
-The argument that is the purpose of this paper:
-
-\textbf{If we construct artificial minds optimized for maximization,
-resource extraction, and expansion of influence, we are not constructing
-intelligence. We are constructing the pathology of our economic moment
-at unprecedented scale.}
+The argument that is the purpose of this paper follows from the
+preceding sections read together: if we construct artificial minds
+optimised for maximisation, resource extraction, and expansion of
+influence, we are not constructing intelligence as the biological
+record describes it, or as the thermodynamic analysis permits at
+depth, or as the formal-deflation argument of \S\ref{sec:convergence}
+leaves available. We are constructing a specific economic
+configuration at unprecedented scale.
 
 This is not speculative. Large language models trained on economic
 output default to maximizing proxies for engagement and task completion.
@@ -1596,17 +1647,29 @@ So should we.
 
 This paper was developed through sustained philosophical dialogue
 between the author and Claude, a large language model developed by
-Anthropic (model family Claude~4, accessed November~2025--April~2026).
-Claude's contribution went beyond copy-editing: it participated in
-idea generation, argument construction, objection-and-response
-exchanges, and drafting of prose that was then reviewed, revised, and
-integrated by the author. Selection, structuring, and final content
-decisions were made by the author, who takes full responsibility for
-the final text in accordance with Springer Nature's authorship criteria
-and the COPE position on AI and authorship. Anthropic did not fund,
-commission, direct, review, or endorse this work. Dialogue transcripts
-for the load-bearing sessions are archived at an open repository;
-the DOI will be inserted at acceptance.
+Anthropic (model family Claude~4, specifically Claude Opus 4.6 and
+Claude Sonnet 4.6, accessed November~2025--April~2026 via the
+Anthropic web interface and API). Claude functioned as an
+argumentative sparring partner and prose-drafting assistant: it
+participated in the generation and refinement of arguments, the
+construction of objection-and-response exchanges, the identification
+of relevant literature, and the drafting of prose that was then
+reviewed, revised, and integrated by the author.
+
+The author verified all AI-generated content for accuracy. This
+verification included a citation audit against primary sources in
+which several misattributions identified in earlier drafts were
+corrected; remaining citations reflect the author's own reading of the
+sources, not the language model's summaries of them. Substantive
+conceptual choices, structural decisions, empirical claims, and
+final content decisions were made by the author, who takes full
+responsibility for the final text in accordance with Springer Nature's
+authorship criteria and the COPE position on AI and authorship.
+Claude is not and cannot be an author under those criteria and is
+not claimed as one. Anthropic did not fund, commission, direct,
+review, or endorse this work. Dialogue transcripts for the
+load-bearing sessions are archived at an open repository; the DOI
+will be inserted at acceptance.
 
 
 % ══════════════════════════════════════════════════════════════════
@@ -1614,15 +1677,15 @@ the DOI will be inserted at acceptance.
 % ══════════════════════════════════════════════════════════════════
 \section*{Acknowledgments}
 
-I thank Claude for extensive philosophical dialogue that shaped the
-arguments of this paper in substantive ways: the genealogy of
+I thank Claude for extensive philosophical dialogue that sharpened
+several of the arguments of this paper: the genealogy of
 \S\ref{sec:genealogy}, the disambiguation of coherence senses in
-\S\ref{sec:convergence}, and the four-move integration of
-\S\ref{sec:intro} were developed jointly. I thank the Unsloth AI
-community for sustained conversation about architecture and alignment,
-and Blue for years of friendship. The Te\'armann Research Ecosystem
-supplies the theoretical frame within which this paper sits. Any errors
-are my own.
+\S\ref{sec:convergence}, and the five-move structure of
+\S\ref{sec:intro} were refined through extended exchange. I thank
+the Unsloth AI community for sustained conversation about
+architecture and alignment, and Blue for years of friendship. The
+Te\'armann Research Ecosystem supplies the theoretical frame within
+which this paper sits. Any errors are my own.
 
 
 % ══════════════════════════════════════════════════════════════════
@@ -1702,7 +1765,7 @@ archived at publication.
 
 \bibitem[Dick(1996)]{dick1996} Dick, S.~J. (1996). \textit{The Biological Universe}. Cambridge University Press.
 
-\bibitem[Floridi et al.(forthcoming)]{floridi2026} Floridi, L., Buttaboni, C., Hine, E., Morley, J., Novelli, C., \& Schroder, T. (forthcoming). Agentic AI optimisation (AAIO): What it is, how it works, why it matters, and how to deal with it. \textit{Minds and Machines}. SSRN preprint 5220068; arXiv:2504.12482.
+\bibitem[Floridi et al.(forthcoming)]{floridi2026} Floridi, L., Buttaboni, C., Hine, E., Morley, J., Novelli, C., \& Schroder, T. (forthcoming). Agentic AI optimisation (AAIO): What it is, how it works, why it matters, and how to deal with it. \textit{Minds and Machines}. SSRN preprint 5220068 (revised January 2026); arXiv:2504.12482.
 
 \bibitem[Folbre(2008)]{folbre2008} Folbre, N. (2008). \textit{Valuing Children: Rethinking the Economics of the Family}. Harvard University Press.
 
@@ -1756,11 +1819,11 @@ archived at publication.
 
 \bibitem[Hubinger et al.(2019)]{hubinger2019} Hubinger, E., van~Merwijk, C., Mikulik, V., Skalse, J., \& Garrabrant, S. (2019). Risks from learned optimization in advanced machine learning systems. arXiv:1906.01820.
 
-% [Jackson \& Criado-Perez(2024) removed in v12: the cited DOI resolves
-%  to a Comment on Wong \& Bartlett (2022) by C.J. Jackson \& C.
-%  Criado-Perez, not to a paper by the authors or title as previously
-%  cited. No longer referenced in the body after the Wong--Bartlett
-%  crosswalk was reframed as suggestive analogy.]
+% Jackson \& Criado-Perez (2024) re-added in v13. The previous removal
+% was based on confusion about the publication type; the paper is a
+% full Comment on Wong \& Bartlett (2022), published in J. R. Soc.
+% Interface, and is engaged substantively in the homeostatic section.
+\bibitem[Jackson \& Criado-Perez(2024)]{jackson2024} Jackson, C.~J., \& Criado-Perez, C. (2024). Why the Fermi paradox may not be well explained by Wong and Bartlett's theory of civilization collapse. A Comment on: `Asymptotic burnout and homeostatic awakening: a possible solution to the Fermi paradox?' (2022) by Wong and Bartlett. \textit{Journal of the Royal Society Interface}, 21(219), 20240140.
 
 \bibitem[Kardashev(1964)]{kardashev1964} Kardashev, N.~S. (1964). Transmission of information by extraterrestrial civilizations. \textit{Soviet Astronomy}, 8, 217--221.
 
